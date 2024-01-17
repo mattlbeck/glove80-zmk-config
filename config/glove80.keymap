@@ -83,29 +83,29 @@
     keymap {
         compatible = "zmk,keymap";
 
-        layer_Engrammer {
+        engrammer {
             bindings = <
 &kp F1      &kp F2      &kp F3          &kp F4       &kp F5                                                                                                        &kp F6                &kp F7       &kp F8      &kp F9                 &kp F10
 &kp EQUAL   &kp N1      &kp N2          &kp N3       &kp N4            &kp N5                                                                          &kp N6      &kp N7                &kp N8       &kp N9      &kp N0                 &kp BSLH
 &kp GRAVE   &kp B       &kp Y           &kp O        &kp U             &kp SQT                                                                         &kp SEMI    &kp L                 &kp D        &kp W       &kp V                  &kp Z
 &caps_word  &mt LCMD C  &mt LEFT_ALT I  &mt LCTRL E  &mt LEFT_SHIFT A  &kp COMMA                                                                       &kp PERIOD  &mt RIGHT_SHIFT H     &mt RCTRL T  &mt RALT S  &mt RGUI N             &kp Q
 &kp LSHFT   &kp G       &kp X           &kp J        &kp K             &kp MINUS  &kp ENTER  &kp UP         &kp DOWN  &kp LEFT  &kp RIGHT  &kp ESCAPE  &kp FSLH    &kp R                 &kp M        &kp F       &kp P                  &kp RSHFT
-&magic 1 0  &kp HOME    &kp PG_UP       &kp PG_DN    &kp END                      &kp SPACE  &kp BACKSPACE  &none     &none     &lt 1 DEL  &kp TAB                 &kp LEFT_PARENTHESIS  &kp LBKT     &kp RBKT    &kp RIGHT_PARENTHESIS  &magic 1 0
+&magic 2 0  &kp HOME    &kp PG_UP       &kp PG_DN    &kp END                      &kp SPACE  &kp BACKSPACE  &none     &none     &lt 1 DEL  &kp TAB                 &kp LEFT_PARENTHESIS  &kp LBKT     &kp RBKT    &kp RIGHT_PARENTHESIS  &magic 2 0
             >;
         };
 
         mouse {
             bindings = <
-&trans  &trans  &trans          &trans          &trans                                                                                  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans          &trans          &trans            &trans                                                        &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans          &mmv MOVE_UP    &trans            &trans                                                        &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT   &trans                                                        &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans          &trans          &trans            &trans  &mkp MCLK  &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans          &trans          &trans                    &mkp LCLK  &mkp RCLK  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans          &trans          &trans                                                                                 &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans          &trans          &trans           &trans                                                        &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans          &mmv MOVE_UP    &trans           &trans                                                        &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &trans                                                        &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans          &trans          &trans           &trans  &mkp MCLK  &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans          &trans          &trans                   &mkp LCLK  &mkp RCLK  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans
             >;
         };
 
-        magic_layer {
+        magic {
             bindings = <
 &bt BT_CLR   &none            &none            &none            &none                                                                                     &none  &none  &none  &none  &bt BT_CLR_ALL
 &none        &none            &none            &none            &none            &none                                                             &none  &none  &none  &none  &none  &none
