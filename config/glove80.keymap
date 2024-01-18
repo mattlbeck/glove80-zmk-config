@@ -131,7 +131,7 @@
 &trans  &trans  &trans  &trans  &trans                                                                                    &trans          &trans        &trans          &trans     &trans
 &trans  &trans  &trans  &trans  &trans  &trans                                                            &none           &kp LC(LS(LA(H)))      &kp LC(LS(LA(DOT)))  &kp LC(LS(LA(COMMA)))  &none      &none
 &none   &none   &none   &none   &none   &none                                                             &kp LC(LS(LA(Y)))      &kp LC(LS(LA(E)))      &kp LC(LS(LA(N)))    &kp LC(LS(LA(I)))      &kp LC(LS(LA(L))) &none
-&none   &none   &none   &none   &none   &none                                                             &kp LGUI(GRAVE) &kp LC(LS(TAB)) &kp LGUI(W)   &kp LC(TAB)     &none      &none
+&none   &none   &none   &none   &none   &none                                                             &kp LG(GRAVE) &kp LC(LS(TAB)) &kp LG(W)   &kp LC(TAB)     &none      &none
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp C_PLAY_PAUSE  &trans          &trans          &trans        &trans          &trans     &trans
 &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                            &trans          &trans        &trans          &trans     &trans
             >;
