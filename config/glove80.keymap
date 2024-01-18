@@ -12,6 +12,7 @@
 #include <dt-bindings/zmk/rgb.h>
 
 #define HYPER LC(LS(LG(LALT)))
+#define MEH   LC(LS(LALT))
 
 // layers
 
@@ -129,12 +130,12 @@
 
         function {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                                                                            &trans  &trans          &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                                    &none                   &kp MEH(H)  &kp  MEH(DOT)  &kp MEH(COMMA)  &none                 &none
-&none   &none   &none      &none      &none   &none                                                               &kp MEH(Y)   &kp MEH(E)    &kp MEH(N)   &kp MEH(I)     &kp MEH(L) &none
-&none   &none   &none      &none      &none   &none                                                               &kp LGUI(GRAVE)      &kp LC(LS(TAB))      &kp LGUI(W)             &kp LC(TAB)            &none                 &none
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp C_PLAY_PAUSE  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans                                                                                    &trans          &trans        &trans          &trans     &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                            &none           &kp MEH(H)      &kp MEH(DOT)  &kp MEH(COMMA)  &none      &none
+&none   &none   &none   &none   &none   &none                                                             &kp MEH(Y)      &kp MEH(E)      &kp MEH(N)    &kp MEH(I)      &kp MEH(L) &none
+&none   &none   &none   &none   &none   &none                                                             &kp LGUI(GRAVE) &kp LC(LS(TAB)) &kp LGUI(W)   &kp LC(TAB)     &none      &none
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp C_PLAY_PAUSE  &trans          &trans          &trans        &trans          &trans     &trans
+&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                            &trans          &trans        &trans          &trans     &trans
             >;
         };
 
