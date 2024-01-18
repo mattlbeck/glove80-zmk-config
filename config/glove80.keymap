@@ -146,7 +146,7 @@
 &none   &none   &none      &none      &none   &none   &none  &none  &none  &none          &none  &none &none  &none  &none  &none  &none  &none
 &none   &none   &none      &none      &none           &none  &none  &kp LA(TAB)  &kp LG(SPACE)  &none  &none        &none  &none  &none  &none  &none
             >;
-        }
+        };
 
         magic {
             bindings = <
