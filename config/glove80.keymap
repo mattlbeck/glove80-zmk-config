@@ -58,7 +58,7 @@
 // MOUSE_MOTION_MAXIMUM_SPEED defines how quickly the mouse pointer can move.
 //
 
-#define MOUSE_MOTION_MAXIMUM_SPEED 1000
+#define MOUSE_MOTION_MAXIMUM_SPEED 1200
 
 //
 // MOUSE_SCROLL_DELAY defines how long to wait (milliseconds) before starting
@@ -68,7 +68,7 @@
 #define MOUSE_SCROLL_DELAY 0
 
 // 
-#define MOUSE_SCROLL_MAXIMUM_SPEED 100
+#define MOUSE_SCROLL_MAXIMUM_SPEED 20
 
 //
 // MOUSE_SCROLL_ACCELERATION_EXPONENT sets how the mouse pointer accelerates:
