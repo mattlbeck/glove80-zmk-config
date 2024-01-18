@@ -18,7 +18,7 @@
 #define MAGIC 2
 #define FACTORY_TEST 3
 
-#define U_MOUSE_MOVE_MAX 1400                     /* <--- New max speed setting (default: 600) */
+#define U_MOUSE_MOVE_MAX 1200                     /* <--- New max speed setting (default: 600) */
 #undef MOVE_UP
 #undef MOVE_DOWN
 #undef MOVE_LEFT
@@ -43,7 +43,7 @@
 #define SCROLL_LEFT SCROLL_HOR(-U_MOUSE_SCROLL_MAX)
 #define SCROLL_RIGHT SCROLL_HOR(U_MOUSE_SCROLL_MAX)
 
-&mwh {
+&msc {
   time-to-max-speed-ms = <500>;                 /* <--- How long time until max speed is reached */
 };
 
