@@ -83,12 +83,12 @@
 
         engrammer {
             bindings = <
-&kp F1      &kp F2      &kp F3          &kp F4       &kp F5                                                                                                                           &kp F6                &kp F7       &kp F8      &kp F9                 &kp F10
-&kp EQUAL   &kp N1      &kp N2          &kp N3       &kp N4            &kp N5                                                                                          &kp N6         &kp N7                &kp N8       &kp N9      &kp N0                 &kp BSLH
-&kp GRAVE   &kp B       &kp Y           &kp O        &kp U             &kp SQT                                                                                         &kp SEMICOLON  &kp L                 &kp D        &kp W       &kp V                  &kp Z
-&caps_word  &mt LCMD C  &mt LEFT_ALT I  &mt LCTRL E  &mt LEFT_SHIFT A  &kp COMMA                                                                                       &kp PERIOD     &mt RIGHT_SHIFT H     &mt RCTRL T  &mt RALT S  &mt RGUI N             &kp Q
-&kp LSHFT   &kp G       &kp X           &kp J        &kp K             &kp MINUS  &lt 4 ENTER  &kp UP           &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &kp ESCAPE  &kp SLASH      &kp R                 &kp M        &kp F       &kp P                  &kp RSHFT
-&magic 6 0  &kp HOME    &kp PG_UP       &kp PG_DN    &kp END                      &lt 1 SPACE  &lt 2 BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &lt 3 DEL      &lt 1 TAB                  &kp LEFT_PARENTHESIS  &kp LBKT     &kp RBKT    &kp RIGHT_PARENTHESIS  &magic 6 0
+&kp F1      &kp F2      &kp F3          &kp F4       &kp F5                                                                                                                             &kp F6                &kp F7       &kp F8      &kp F9                 &kp F10
+&kp N1      &kp N2      &kp N3          &kp N4       &kp N5            &kp EQUAL                                                                                         &kp BSLH       &kp N6                &kp N7       &kp N8      &kp N9                 &kp N0
+&none       &kp B       &kp Y           &kp O        &kp U             &kp SQT                                                                                           &kp SEMICOLON  &kp L                 &kp D        &kp W       &kp V                  &kp Z
+&caps_word  &mt LCMD C  &mt LEFT_ALT I  &mt LCTRL E  &mt LEFT_SHIFT A  &kp COMMA                                                                                         &kp PERIOD     &mt RIGHT_SHIFT H     &mt RCTRL T  &mt RALT S  &mt RGUI N             &kp Q
+&none       &kp G       &kp X           &kp J        &kp K             &kp MINUS  &lt 1 ENTER  &kp UP           &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &lt 1 ESCAPE  &kp SLASH      &kp R                 &kp M        &kp F       &kp P                  &none
+&magic 6 0  &kp HOME    &kp PG_UP       &kp PG_DN    &kp END                      &lt 4 SPACE  &lt 2 BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &kp DEL        &lt 3 TAB                    &kp LEFT_PARENTHESIS  &kp LBKT     &kp RBKT    &kp RIGHT_PARENTHESIS  &magic 6 0
             >;
         };
 
