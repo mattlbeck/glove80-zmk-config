@@ -92,6 +92,8 @@
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/rgb.h>
 
+#define _SCRL_UP SCRL_Y(-ZMK_MOUSE_DEFAULT_SCRL_VAL)
+
 &mmv {
     delay-ms = <MOUSE_MOTION_DELAY>;
     acceleration-exponent = <MOUSE_MOTION_ACCELERATION_EXPONENT>;
@@ -206,7 +208,7 @@
 &trans  &trans  &trans          &trans          &trans           &trans                                                                       &trans     &trans     &trans     &trans    &trans    &trans
 &trans  &trans  &kp LC(DOWN)    &mmv MOVE_UP    &kp LC(UP)       &kp LG(X)                                                                    &kp LG(X)  &trans     &trans     &trans    &trans    &trans
 &trans  &trans  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &kp LG(C)                                                                    &kp LG(C)  &kp RSHFT  &kp RCTRL  &kp RALT  &kp RGUI  &trans
-&trans  &trans  &trans          &msc SCRL_Y(ZMK_MOUSE_DEFAULT_SCRL_VAL)    &msc SCRL_Y(-ZMK_MOUSE_DEFAULT_SCRL_VAL)   &kp LG(V)  &mkp MCLK  &trans     &trans       &trans         &trans  &trans  &kp LG(V)  &trans     &trans     &trans    &trans    &trans
+&trans  &trans  &trans          &msc _SCRL_UP    &none   &kp LG(V)  &mkp MCLK  &trans     &trans       &trans         &trans  &trans  &kp LG(V)  &trans     &trans     &trans    &trans    &trans
 &trans  &trans  &trans          &trans          &trans                      &mkp LCLK  &mkp RCLK  &kp LG(TAB)  &kp LG(SPACE)  &trans  &trans             &trans     &trans     &trans    &trans    &trans
             >;
         };
