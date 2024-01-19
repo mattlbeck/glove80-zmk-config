@@ -68,6 +68,7 @@
 #define MOUSE_SCROLL_DELAY 0
 
 // 
+
 #define MOUSE_SCROLL_MAXIMUM_SPEED 20
 
 //
@@ -172,23 +173,23 @@
 
         engrammer {
             bindings = <
-&kp F1      &kp F2      &kp F3          &kp F4       &kp F5                                                                                                                             &kp F6                &kp F7       &kp F8      &kp F9                 &kp F10
-&kp N1      &kp N2      &kp N3          &kp N4       &kp N5            &kp EQUAL                                                                                         &kp BSLH       &kp N6                &kp N7       &kp N8      &kp N9                 &kp N0
-&none       &kp B       &kp Y           &kp O        &kp U             &kp SQT                                                                                           &kp SEMICOLON  &kp L                 &kp D        &kp W       &kp V                  &kp Z
-&caps_word  &mt LCMD C  &mt LEFT_ALT I  &mt LCTRL E  &mt LEFT_SHIFT A  &kp COMMA                                                                                         &kp PERIOD     &mt RIGHT_SHIFT H     &mt RCTRL T  &mt RALT S  &mt RGUI N             &kp Q
-&none       &kp G       &kp X           &kp J        &kp K             &kp MINUS  &lt 1 ENTER  &kp UP           &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &lt 1 ESCAPE  &kp SLASH      &kp R                 &kp M        &kp F       &kp P                  &none
-&magic 6 0  &kp HOME    &kp PG_UP       &kp PG_DN    &kp END                      &lt 2 SPACE  &lt 4 BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &kp DEL        &lt 3 TAB                    &kp LEFT_PARENTHESIS  &kp LBKT     &kp RBKT    &kp RIGHT_PARENTHESIS  &magic 6 0
+&kp F1            &kp F2       &kp F3                &kp F4                 &kp F5                                                                                                                             &kp F6             &kp F7           &kp F8        &kp F9      &kp F10
+&kp N1            &kp N2       &kp N3                &kp N4                 &kp N5            &kp EQUAL                                                                                         &kp BSLH       &kp N6             &kp N7           &kp N8        &kp N9      &kp N0
+&none             &kp B        &kp Y                 &kp O                  &kp U             &kp SQT                                                                                           &kp SEMICOLON  &kp L              &kp D            &kp W         &kp V       &kp Z
+&caps_word        &mt LCMD C   &mt LEFT_ALT I        &mt LCTRL E            &mt LEFT_SHIFT A  &kp COMMA                                                                                         &kp PERIOD     &mt RIGHT_SHIFT H  &mt RCTRL T      &mt RALT S    &mt RGUI N  &kp Q
+&kp LEFT_BRACKET  &kp G        &kp X                 &kp J                  &kp K             &kp MINUS  &lt 1 ENTER  &kp UP           &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &lt 1 ESCAPE  &kp SLASH      &kp R              &kp M            &kp F         &kp P       &kp RIGHT_BRACKET
+&magic 6 0        &kp PAGE_UP  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp PAGE_DOWN                &lt 2 SPACE  &lt 4 BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &kp DEL        &lt 3 TAB                    &kp HOME           &kp EXCLAMATION  &kp QUESTION  &kp END     &magic 6 0
             >;
         };
 
         sympad {
             bindings = <
-&none  &none        &none            &none            &none                                                                                                                      &none                 &none     &none        &none                  &none
-&none  &none        &none            &none            &none           &none                                                                                       &kp CARET      &none                 &kp N7    &kp N8       &kp N9                 &none
-&none  &kp CARET    &kp TILDE        &kp GRAVE        &kp DQT         &kp SQT                                                                                     &kp SEMICOLON  &kp COLON             &kp N4    &kp N5       &kp N6                 &none
-&none  &kp HASH     &kp PLUS         &kp EQUAL        &kp LESS_THAN   &kp COMMA                                                                                   &kp PERIOD     &kp GREATER_THAN      &kp N1    &kp N2       &kp N3                 &none
-&none  &kp AT_SIGN  &kp EXCLAMATION  &kp DOLLAR       &kp UNDERSCORE  &kp MINUS  &kp ENTER  &kp UP_ARROW   &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &kp ESCAPE  &kp SLASH      &kp QUESTION          &kp N0    &kp PERCENT  &kp ASTERISK           &none
-&none  &kp PIPE     &kp LEFT_BRACE   &kp RIGHT_BRACE  &kp BACKSLASH              &kp SPACE  &kp BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &kp DEL        &kp TAB                    &kp LEFT_PARENTHESIS  &kp LBKT  &kp RBKT     &kp RIGHT_PARENTHESIS  &kp N0
+&none           &none        &none                 &none                  &none                                                                                                                      &none   &none         &none        &none  &none
+&none           &none        &none                 &none                  &none           &none                                                                                       &kp CARET      &none   &none         &none        &none  &none
+&none           &kp CARET    &kp TILDE             &kp GRAVE              &kp DQT         &kp SQT                                                                                     &kp SEMICOLON  &kp N7  &kp N8        &kp N9       &none  &none
+&kp LEFT_BRACE  &kp HASH     &kp PLUS              &kp EQUAL              &kp LESS_THAN   &kp COMMA                                                                                   &kp PERIOD     &kp N4  &kp N5        &kp N6       &none  &kp RIGHT_BRACE
+&none           &kp AT_SIGN  &kp EXCLAMATION       &kp DOLLAR             &kp UNDERSCORE  &kp MINUS  &kp ENTER  &kp UP_ARROW   &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &kp ESCAPE  &kp SLASH      &kp N1  &kp N2        &kp N3       &none  &none
+&none           &kp PIPE     &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp BACKSLASH              &kp SPACE  &kp BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &kp DEL        &kp TAB                    &kp N0  &kp ASTERISK  &kp PERCENT  &none  &none
             >;
         };
 
