@@ -173,23 +173,23 @@
 
         engrammer {
             bindings = <
-&kp F1            &kp F2       &kp F3                &kp F4                 &kp F5                                                                                                                                    &kp F6             &kp F7           &kp F8        &kp F9       &kp F10
-&kp N1            &kp N2       &kp N3                &kp N4                 &kp N5            &kp LESS_THAN                                                                                         &kp GREATER_THAN  &kp N6             &kp N7           &kp N8        &kp N9       &kp N0
-&none             &kp B        &kp Y                 &kp O                  &kp U             &kp SQT                                                                                               &kp SEMICOLON     &kp L              &kp D            &kp W         &kp V        &kp Z
-&caps_word        &mt LCTRL C  &mt LEFT_ALT I        &mt LGUI E             &mt LEFT_SHIFT A  &kp COMMA                                                                                             &kp PERIOD        &mt RIGHT_SHIFT H  &mt RGUI T       &mt RALT S    &mt RCTRL N  &kp Q
-&kp LEFT_BRACKET  &kp G        &kp X                 &kp J                  &kp K             &kp MINUS      &lt 1 ENTER  &kp UP           &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &lt 1 ESCAPE  &kp SLASH         &kp R              &kp M            &kp F         &kp P        &kp RIGHT_BRACKET
-&magic 5 0        &kp PAGE_UP  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp PAGE_DOWN                    &lt 2 SPACE  &lt 4 BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &kp DEL        &lt 3 TAB                       &kp HOME           &kp EXCLAMATION  &kp QUESTION  &kp END      &magic 5 0
+&kp F1      &kp F2       &kp F3                &kp F4                 &kp F5                                                                                                                                      &kp F6             &kp F7            &kp F8             &kp F9         &kp F10
+&kp N1      &kp N2       &kp N3                &kp N4                 &kp N5            &kp LESS_THAN                                                                                           &kp GREATER_THAN  &kp N6             &kp N7            &kp N8             &kp N9         &kp N0
+&none       &kp B        &kp Y                 &kp O                  &kp U             &kp SQT                                                                                                 &kp SEMICOLON     &kp L              &kp D             &kp W              &kp V          &kp Z
+&caps_word  &mt LCTRL C  &mt LEFT_ALT I        &mt LGUI E             &mt LEFT_SHIFT A  &kp COMMA                                                                                               &kp PERIOD        &mt RIGHT_SHIFT H  &mt RGUI T        &mt RALT S         &mt RCTRL N    &kp Q
+&kp HOME    &kp G        &kp X                 &kp J                  &kp K             &kp MINUS      &lt 1 ENTER  &kp PAGE_UP      &kp PAGE_DOWN  &kp LG(Z)      &kp LS(LG(Z))  &lt 1 ESCAPE  &kp SLASH         &kp R              &kp M             &kp F              &kp P          &kp END
+&magic 5 0  &kp PAGE_UP  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp EXCLAMATION                  &lt 2 SPACE  &lt 4 BACKSPACE  &kp LG(TAB)    &kp LG(SPACE)  &kp DEL        &lt 3 TAB                       &kp QUESTION       &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp PAGE_DOWN  &magic 5 0
             >;
         };
 
         sympad {
             bindings = <
-&none           &none      &none                 &none                  &none                                                                                                                             &none   &none     &none         &none        &none
-&none           &none      &none                 &none                  &none           &kp LESS_THAN                                                                                   &kp GREATER_THAN  &none   &none     &none         &none        &none
-&none           &kp CARET  &kp TILDE             &kp GRAVE              &kp DQT         &kp SQT                                                                                         &kp SEMICOLON     &kp N7  &kp N8    &kp N9        &kp PERCENT  &none
-&kp LEFT_BRACE  &kp HASH   &kp PLUS              &kp EQUAL              &kp COLON       &kp COMMA                                                                                       &kp PERIOD        &kp N4  &kp N5    &kp N6        &kp ASTRK    &kp RIGHT_BRACE
-&none           &kp PIPE   &kp AT_SIGN           &kp DOLLAR             &kp UNDERSCORE  &kp MINUS      &kp ENTER  &kp UP_ARROW   &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &kp ESCAPE  &kp SLASH         &kp N1  &kp N2    &kp N3        &none        &none
-&none           &none      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp BACKSLASH                  &kp SPACE  &kp BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &kp DEL        &kp TAB                       &kp N0  &kp EXCL  &kp QUESTION  &none        &none
+&none           &none      &none                 &none                  &none                                                                                                                             &none   &none      &none         &none  &none
+&none           &none      &none                 &none                  &none           &kp LESS_THAN                                                                                   &kp GREATER_THAN  &kp N7  &kp N8     &kp N9        &none  &none
+&none           &kp CARET  &kp TILDE             &kp GRAVE              &kp DQT         &kp SQT                                                                                         &kp SEMICOLON     &kp N4  &kp N5     &kp N6        &none  &none
+&kp LEFT_BRACE  &kp HASH   &kp PLUS              &kp EQUAL              &kp COLON       &kp COMMA                                                                                       &kp PERIOD        &kp N1  &kp N2     &kp N3        &none  &kp RIGHT_BRACE
+&none           &kp PIPE   &kp AT_SIGN           &kp DOLLAR             &kp BACKSLASH   &kp MINUS      &kp ENTER  &kp UP_ARROW   &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &kp ESCAPE  &kp SLASH         &kp N0  &kp ASTRK  &kp PERCENT   &none  &none
+&none           &none      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDERSCORE                 &kp SPACE  &kp BACKSPACE  &kp LG(TAB)  &kp LG(SPACE)  &kp DEL        &kp TAB                       &kp N0  &kp EXCL   &kp QUESTION  &none  &none
             >;
         };
 
