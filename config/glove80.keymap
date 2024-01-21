@@ -177,8 +177,8 @@
 &kp N1      &kp N2       &kp N3                &kp N4                 &kp N5            &kp LESS_THAN                                                                                           &kp GREATER_THAN  &kp N6             &kp N7            &kp N8             &kp N9         &kp N0
 &none       &kp B        &kp Y                 &kp O                  &kp U             &kp SQT                                                                                                 &kp SEMICOLON     &kp L              &kp D             &kp W              &kp V          &kp Z
 &caps_word  &mt LCTRL C  &mt LEFT_ALT I        &mt LGUI E             &mt LEFT_SHIFT A  &kp COMMA                                                                                               &kp PERIOD        &mt RIGHT_SHIFT H  &mt RGUI T        &mt RALT S         &mt RCTRL N    &kp Q
-&kp HOME    &kp G        &kp X                 &kp J                  &kp K             &kp MINUS      &lt 1 ENTER  &kp PAGE_UP      &kp PAGE_DOWN  &kp LG(Z)      &kp LS(LG(Z))  &lt 1 ESCAPE  &kp SLASH         &kp R              &kp M             &kp F              &kp P          &kp END
-&magic 5 0  &kp PAGE_UP  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp EXCLAMATION                  &lt 2 SPACE  &lt 4 BACKSPACE  &kp LG(TAB)    &kp LG(SPACE)  &kp DEL        &lt 3 TAB                       &kp QUESTION       &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp PAGE_DOWN  &magic 5 0
+&kp HOME    &kp G        &kp X                 &kp J                  &kp K             &kp MINUS      &lt 1 BACKSPACE  &kp PAGE_UP  &kp PAGE_DOWN  &kp LG(Z)      &kp LS(LG(Z))  &lt 1 DELETE  &kp SLASH         &kp R              &kp M             &kp F              &kp P          &kp END
+&magic 5 0  &kp PAGE_UP  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp EXCLAMATION                  &lt 2 SPACE      &lt 4 ENTER  &kp LG(TAB)    &kp LG(SPACE)  &kp ESCAPE     &lt 3 TAB                       &kp QUESTION       &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp PAGE_DOWN  &magic 5 0
             >;
         };
 
