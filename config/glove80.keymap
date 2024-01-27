@@ -198,7 +198,7 @@
 &none  &none          &none          &none      &none                                                                                                              &none             &none             &none              &none              &none
 &none  &none          &none          &none      &none      &none                                                                                        &none      &none             &none             &none              &none              &none
 &none  &none          &none          &none      &none      &kp LG(X)                                                                                    &kp LG(X)  &kp LS(LG(LEFT))  &kp LS(LA(LEFT))  &kp LS(LA(RIGHT))  &kp LS(LG(RIGHT))  &none
-&none  &kp LCTRL      &kp LALT       &kp LGUI   &kp LSHFT  &kp LG(C)                                                                                    &kp LG(C)  &kp LEFT          &kp UP            &kp DOWN           &kp RIGHT          &none
+&none  &kp LCTRL      &kp LALT       &kp LGUI   &kp LSHFT  &kp LG(C)                                                                                    &kp LG(C)  &kp LEFT          &kp DOWN          &kp UP_ARROW       &kp RIGHT          &none
 &none  &kp LS(LG(G))  &kp LS(LG(F))  &kp LG(F)  &kp LG(G)  &kp LG(V)  &kp BACKSPACE  &none      &none        &kp LG(Z)      &kp LS(LG(Z))   &kp DELETE  &kp LG(V)  &kp LG(LEFT)      &kp LA(LEFT)      &kp LA(RIGHT)      &kp LG(RIGHT)      &none
 &none  &kp HOME       &kp PG_UP      &kp PG_DN  &kp END               &kp SPACE      &kp ENTER  &kp LG(TAB)  &kp LG(SPACE)  &kp LA(ESCAPE)  &kp TAB                &none             &kp LG(A)         &none              &none              &none
             >;
