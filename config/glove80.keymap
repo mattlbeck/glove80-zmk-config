@@ -108,6 +108,10 @@
     time-to-max-speed-ms = <MOUSE_SCROLL_TIME_TO_MAXIMUM_SPEED>;
 };
 
+&mt {
+    flavor = "balanced";
+}
+
 / {
     behaviors {
         // For the "layer" key, it'd nice to be able to use it as either a shift or a toggle.
