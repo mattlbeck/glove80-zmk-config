@@ -110,7 +110,7 @@
 
 &mt {
     flavor = "balanced";
-}
+};
 
 / {
     behaviors {
