@@ -177,7 +177,7 @@
 &trans      &kp N1           &kp N2                &kp N3                 &kp N4            &kp N5                                                                                           &kp N6  &kp N7             &kp N8            &kp N9             &kp N0               &trans
 &trans      &kp Q            &kp W                 &kp F                  &kp P             &kp B                                                                                            &kp J   &kp L              &kp U             &kp Y              &kp SEMI             &none
 &caps_word  &mt LCTRL A      &mt LEFT_ALT R        &mt LGUI S             &mt LEFT_SHIFT T  &kp G                                                                                            &kp M   &mt RIGHT_SHIFT N  &mt RGUI E        &mt RALT I         &mt RCTRL O          &trans
-&trans      &kp Z            &kp X                 &kp C                  &kp D             &kp V   &lt 1 BACKSPACE  &kp PAGE_UP  &kp PAGE_DOWN  &kp LG(Z)      &kp LS(LG(Z))  &lt 1 DELETE  &kp K   &kp H              &kp COMMA         &kp DOT            &mt BACKSLASH SLASH  &trans
+&tog 3      &kp Z            &kp X                 &kp C                  &kp D             &kp V   &lt 1 BACKSPACE  &kp PAGE_UP  &kp PAGE_DOWN  &kp LG(Z)      &kp LS(LG(Z))  &lt 1 DELETE  &kp K   &kp H              &kp COMMA         &kp DOT            &mt BACKSLASH SLASH  &trans
 &magic 5 0  &kp EXCLAMATION  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDERSCORE            &lt 2 SPACE      &lt 4 ENTER  &kp LG(TAB)    &kp LG(SPACE)  &kp ESCAPE     &lt 3 TAB             &kp MINUS          &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp QUESTION         &magic 5 0
             >;
         };
