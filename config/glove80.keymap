@@ -188,19 +188,19 @@
 &none  &none            &none                 &none                  &none           &kp LESS_THAN                                                                                      &kp GREATER_THAN  &kp N7     &kp N8            &kp N9             &none                       &none
 &none  &none            &kp TILDE             &kp SQT                &kp DQT         &kp GRAVE                                                                                          &kp PLUS          &kp N4     &kp N5            &kp N6             &none                       &none
 &none  &kp AMPS         &kp HASH              &kp EXCLAMATION        &kp COLON       &kp AT_SIGN                                                                                        &kp EQUAL         &kp N1     &kp N2            &kp N3             &kp PERCENT                 &none
-&none  &none            &kp LEFT_BRACE        &kp RIGHT_BRACE        &kp DOLLAR      &kp PIPE       &kp BACKSPACE  &kp UP_ARROW  &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &kp DELETE  &kp ASTERISK      &kp N0     &kp COMMA         &kp PERIOD         &mt NON_US_BACKSLASH SLASH  &none
+&none  &kp CARET        &kp LEFT_BRACE        &kp RIGHT_BRACE        &kp DOLLAR      &kp PIPE       &kp BACKSPACE  &kp UP_ARROW  &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &kp DELETE  &kp ASTERISK      &kp N0     &kp COMMA         &kp PERIOD         &mt NON_US_BACKSLASH SLASH  &none
 &none  &kp EXCLAMATION  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDERSCORE                 &kp SPACE      &kp ENTER     &kp LG(TAB)  &kp LG(SPACE)  &kp ESCAPE     &kp TAB                       &kp MINUS  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp QUESTION                &none
             >;
         };
 
         cursor {
             bindings = <
-&none  &none          &none          &none      &none                                                                                                              &none             &none             &none              &none              &none
-&none  &none          &none          &none      &none      &none                                                                                        &none      &none             &none             &none              &none              &none
-&none  &none          &none          &none      &none      &kp LG(X)                                                                                    &kp LG(X)  &kp LS(LG(LEFT))  &kp LS(LA(LEFT))  &kp LS(LA(RIGHT))  &kp LS(LG(RIGHT))  &none
-&none  &kp LCTRL      &kp LALT       &kp LGUI   &kp LSHFT  &kp LG(C)                                                                                    &kp LG(C)  &kp LEFT          &kp DOWN          &kp UP_ARROW       &kp RIGHT          &none
-&none  &kp LS(LG(G))  &kp LS(LG(F))  &kp LG(F)  &kp LG(G)  &kp LG(V)  &kp BACKSPACE  &none      &none        &kp LG(Z)      &kp LS(LG(Z))   &kp DELETE  &kp LG(V)  &kp LG(LEFT)      &kp LA(LEFT)      &kp LA(RIGHT)      &kp LG(RIGHT)      &none
-&none  &kp HOME       &kp PG_UP      &kp PG_DN  &kp END               &kp SPACE      &kp ENTER  &kp LG(TAB)  &kp LG(SPACE)  &kp LA(ESCAPE)  &kp TAB                &none             &kp LG(A)         &none              &none              &none
+&none  &none     &none           &none           &none                                                                                                                  &none           &none          &none          &none              &none
+&none  &none     &none           &none           &none          &none                                                                                        &none      &none           &none          &none          &none              &none
+&none  &none     &kp LG(LEFT)    &kp UP_ARROW    &kp RG(RIGHT)  &kp LG(X)                                                                                    &kp LG(X)  &none           &none          &none          &none              &none
+&none  &none     &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT      &kp LG(C)                                                                                    &kp LG(C)  &kp LEFT_SHIFT  &kp RIGHT_GUI  &kp RIGHT_ALT  &kp RIGHT_CONTROL  &none
+&none  &none     &kp LA(LEFT)    &kp LG(F)       &kp LA(RIGHT)  &kp LG(V)  &kp BACKSPACE  &none      &none        &kp LG(Z)      &kp LS(LG(Z))   &kp DELETE  &kp LG(V)  &none           &none          &none          &none              &none
+&none  &kp HOME  &kp PG_UP       &kp PG_DN       &kp END                   &kp SPACE      &kp ENTER  &kp LG(TAB)  &kp LG(SPACE)  &kp LA(ESCAPE)  &kp TAB                &none           &none          &none          &none              &none
             >;
         };
 
