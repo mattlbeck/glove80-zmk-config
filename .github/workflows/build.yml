@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: bryanforbes/zmk
-          ref: mouse-3.2-moergo
+          ref: 3111d42 
           path: src
       - uses: cachix/install-nix-action@v20
         with:
