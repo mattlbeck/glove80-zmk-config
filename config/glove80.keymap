@@ -178,7 +178,7 @@
 &caps_word  &kp Q            &kp W                 &kp F                  &kp P             &kp B                                                                                                       &kp J   &kp L              &kp U             &kp Y              &kp SEMI             &none
 &kp TAB     &mt LCTRL A      &mt LEFT_ALT R        &mt LGUI S             &mt LEFT_SHIFT T  &kp G                                                                                                       &kp M   &mt RIGHT_SHIFT N  &mt RGUI E        &mt RALT I         &mt RCTRL O          &trans
 &tog 3      &kp Z            &kp X                 &kp C                  &kp D             &kp V   &lt 1 BACKSPACE  &lt 5 PG_UP  &kp PAGE_DOWN  &kp LG(Z)      &kp LS(LC(Z))  &lt 1 DELETE             &kp K   &kp H              &lt 3 COMMA       &kp DOT            &mt BACKSLASH SLASH  &trans
-&magic 7 0  &kp EXCLAMATION  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDERSCORE            &lt 2 SPACE      &lt 4 ENTER  &lt 6 LG(TAB)  &kp LG(SPACE)  &kp ESCAPE     &lt 3 LC(LA(LS(LG(H))))          &kp MINUS          &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp QUESTION         &magic 7 0
+&magic 7 0  &kp EXCLAMATION  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDERSCORE            &lt 2 SPACE      &lt 4 ENTER  &lt 8 LG(TAB)  &kp LG(SPACE)  &kp ESCAPE     &lt 3 LC(LA(LS(LG(H))))          &kp MINUS          &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp QUESTION         &magic 7 0
             >;
         };
 
@@ -210,7 +210,7 @@
 &trans  &trans  &trans             &trans          &trans             &trans                                                                       &trans     &trans                   &trans                 &trans                  &trans    &trans
 &trans  &trans  &kp LC(LS(LA(E)))  &mmv MOVE_UP    &kp LC(LS(LA(N)))  &kp LG(X)                                                                    &kp LG(X)  &trans                   &trans                 &trans                  &trans    &trans
 &trans  &trans  &mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_RIGHT    &kp LG(C)                                                                    &kp LG(C)  &mt RSHFT LC(LS(LA(Y)))  &kp RGUI               &mt RALT LC(LS(LA(L)))  &kp RALT  &trans
-&trans  &trans  &trans             &msc SCRL_UP    &msc SCRL_DOWN     &kp LG(V)  &mkp MCLK  &trans     &trans       &trans         &trans  &trans  &kp LG(V)  &kp LC(LS(LA(H)))        &kp LC(LS(LA(COMMA)))  &kp LC(LS(LA(PERIOD)))  &trans    &trans
+&trans  &trans  &trans             &msc SCRL_UP    &msc SCRL_DOWN     &kp LG(V)  &mkp MCLK  &trans     &trans       &trans         &trans  &trans  &kp LG(V)  &trans                   &kp LC(LS(LA(COMMA)))  &kp LC(LS(LA(PERIOD)))  &trans    &trans
 &trans  &trans  &trans             &kp LC(DOWN)    &kp LC(UP)                    &mkp LCLK  &mkp RCLK  &kp LG(TAB)  &kp LG(SPACE)  &trans  &trans             &trans                   &trans                 &trans                  &trans    &trans
             >;
         };
@@ -218,7 +218,7 @@
         function {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                                                                                                         &trans             &trans                 &trans                  &trans             &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                                              &none              &kp LC(LS(LA(H)))  &kp LC(LS(LA(COMMA)))  &kp LC(LS(LA(PERIOD)))  &none              &none
+&trans  &trans  &trans  &trans  &trans  &trans                                                                              &none              &trans             &kp LC(LS(LA(COMMA)))  &kp LC(LS(LA(PERIOD)))  &none              &none
 &none   &none   &none   &none   &none   &none                                                                               &kp LC(LS(LA(Y)))  &kp LC(LS(LA(E)))  &kp LC(LS(LA(N)))      &kp LC(LS(LA(I)))       &kp LC(LS(LA(L)))  &none
 &none   &none   &none   &none   &none   &none                                                                               &kp LG(GRAVE)      &kp LC(LS(TAB))    &kp LG(W)              &kp LC(TAB)             &none              &none
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans       &trans         &trans        &kp C_PLAY_PAUSE  &trans             &trans             &kp LG(LS(T))          &trans                  &trans             &trans
@@ -256,6 +256,17 @@
 &bootloader  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD  &rgb_ug RGB_HUD  &rgb_ug RGB_BRD  &rgb_ug RGB_EFF                                                             &none  &none  &none  &none  &none  &bootloader
 &sys_reset   &none            &none            &none            &none            &none            &bt_2  &bt_3  &none         &none  &none  &none            &none  &none  &none  &none  &none  &sys_reset
 &none        &none            &none            &none            &none                             &bt_0  &bt_1  &out OUT_USB  &none  &none  &rgb_ug RGB_TOG         &none  &none  &none  &none  &none
+            >;
+        };
+
+        Amethyst {
+            bindings = <
+&trans  &trans  &trans                &trans             &trans                                                                                 &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &trans                &trans             &trans                 &trans                                                  &trans  &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &trans                &trans             &trans                 &trans                                                  &trans  &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &kp LS(LA(SPACE))     &kp LC(LA(LS(H)))  &kp LS(LA(SPACE))      &trans                                                  &trans  &kp LS(LA(J))  &trans  &kp LS(LA(K))  &trans  &trans
+&trans  &trans  &kp LS(LA(LC(LEFT)))  &trans             &kp LS(LA(LC(RIGHT)))  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &trans                &trans             &trans                         &trans  &trans  &trans  &trans  &trans  &trans          &trans         &trans  &trans         &trans  &trans
             >;
         };
     };
