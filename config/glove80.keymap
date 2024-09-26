@@ -226,17 +226,6 @@
             >;
         };
 
-        window {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans                                                                  &trans                    &trans                    &trans                     &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &trans                    &trans                    &trans                     &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &trans                    &kp LA(LC(LS(LG(UP))))    &trans                     &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &kp LS(LA(LC(LG(LEFT))))  &kp LS(LA(LC(LG(DOWN))))  &kp LS(LC(LA(LG(RIGHT))))  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans                    &kp LS(LA(LC(LG(F))))     &kp LS(LA(LC(LG(N))))      &trans  &trans
-&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans          &trans                    &trans                    &trans                     &trans  &trans
-            >;
-        };
-
         switcher {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                                                                  &trans                &trans  &trans                 &trans  &trans
@@ -248,14 +237,14 @@
             >;
         };
 
-        magic {
+        window {
             bindings = <
-&bt BT_CLR   &none            &none            &none            &none                                                                                               &none  &none  &none  &none  &bt BT_CLR_ALL
-&none        &none            &none            &none            &none            &none                                                                       &none  &none  &none  &none  &none  &none
-&none        &rgb_ug RGB_SPI  &rgb_ug RGB_SAI  &rgb_ug RGB_HUI  &rgb_ug RGB_BRI  &rgb_ug RGB_TOG                                                             &none  &none  &none  &none  &none  &none
-&bootloader  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD  &rgb_ug RGB_HUD  &rgb_ug RGB_BRD  &rgb_ug RGB_EFF                                                             &none  &none  &none  &none  &none  &bootloader
-&sys_reset   &none            &none            &none            &none            &none            &bt_2  &bt_3  &none         &none  &none  &none            &none  &none  &none  &none  &none  &sys_reset
-&none        &none            &none            &none            &none                             &bt_0  &bt_1  &out OUT_USB  &none  &none  &rgb_ug RGB_TOG         &none  &none  &none  &none  &none
+&trans  &trans  &trans  &trans  &trans                                                                  &trans                    &trans                    &trans                     &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &trans                    &trans                    &trans                     &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &trans                    &kp LA(LC(LS(LG(UP))))    &trans                     &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &kp LS(LA(LC(LG(LEFT))))  &kp LS(LA(LC(LG(DOWN))))  &kp LS(LC(LA(LG(RIGHT))))  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans                    &kp LS(LA(LC(LG(F))))     &kp LS(LA(LC(LG(N))))      &trans  &trans
+&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans          &trans                    &trans                    &trans                     &trans  &trans
             >;
         };
 
@@ -267,6 +256,28 @@
 &trans  &trans  &kp LS(LA(SPACE))      &kp LC(LA(LS(H)))  &kp LS(LA(SPACE))       &trans                                                  &trans  &kp LS(LA(J))  &trans  &kp LS(LA(K))  &trans  &trans
 &trans  &trans  &kp LS(LA(LC(COMMA)))  &trans             &kp LS(LA(LC(PERIOD)))  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &trans  &trans         &trans  &trans
 &trans  &trans  &trans                 &trans             &trans                          &trans  &trans  &trans  &trans  &trans  &trans          &trans         &trans  &trans         &trans  &trans
+            >;
+        };
+
+        rectangle {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans                                                                         &trans             &trans           &trans             &trans         &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &trans             &trans           &trans             &trans         &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &kp LC(LA(D))      &kp LC(LA(F))    &kp LC(LA(G))      &trans         &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &kp LC(LA(E))  &kp LC(LA(LEFT))   &kp LC(LA(M))    &kp LC(LA(RIGHT))  &kp LC(LA(T))  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &kp LC(LA(MINUS))  &kp LC(LA(RET))  &kp LC(LA(EQUAL))  &trans         &trans
+&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                 &trans             &trans           &trans             &trans         &trans
+            >;
+        };
+
+        magic {
+            bindings = <
+&bt BT_CLR   &none            &none            &none            &none                                                                                               &none  &none  &none  &none  &bt BT_CLR_ALL
+&none        &none            &none            &none            &none            &none                                                                       &none  &none  &none  &none  &none  &none
+&none        &rgb_ug RGB_SPI  &rgb_ug RGB_SAI  &rgb_ug RGB_HUI  &rgb_ug RGB_BRI  &rgb_ug RGB_TOG                                                             &none  &none  &none  &none  &none  &none
+&bootloader  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD  &rgb_ug RGB_HUD  &rgb_ug RGB_BRD  &rgb_ug RGB_EFF                                                             &none  &none  &none  &none  &none  &bootloader
+&sys_reset   &none            &none            &none            &none            &none            &bt_2  &bt_3  &none         &none  &none  &none            &none  &none  &none  &none  &none  &sys_reset
+&none        &none            &none            &none            &none                             &bt_0  &bt_1  &out OUT_USB  &none  &none  &rgb_ug RGB_TOG         &none  &none  &none  &none  &none
             >;
         };
     };
