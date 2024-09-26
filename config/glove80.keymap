@@ -261,12 +261,12 @@
 
         Amethyst {
             bindings = <
-&trans  &trans  &trans                &trans             &trans                                                                                 &trans         &trans  &trans         &trans  &trans
-&trans  &trans  &trans                &trans             &trans                 &trans                                                  &trans  &trans         &trans  &trans         &trans  &trans
-&trans  &trans  &trans                &trans             &trans                 &trans                                                  &trans  &trans         &trans  &trans         &trans  &trans
-&trans  &trans  &kp LS(LA(SPACE))     &kp LC(LA(LS(H)))  &kp LS(LA(SPACE))      &trans                                                  &trans  &kp LS(LA(J))  &trans  &kp LS(LA(K))  &trans  &trans
-&trans  &trans  &kp LS(LA(LC(LEFT)))  &trans             &kp LS(LA(LC(RIGHT)))  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &trans  &trans         &trans  &trans
-&trans  &trans  &trans                &trans             &trans                         &trans  &trans  &trans  &trans  &trans  &trans          &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &trans             &trans             &trans                                                                             &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &trans             &trans             &trans             &trans                                                  &trans  &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &trans             &trans             &trans             &trans                                                  &trans  &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &kp LS(LA(SPACE))  &kp LC(LA(LS(H)))  &kp LS(LA(SPACE))  &trans                                                  &trans  &kp LS(LA(J))  &trans  &kp LS(LA(K))  &trans  &trans
+&trans  &trans  &kp LS(LA(LC(B)))  &trans             &kp LS(LA(LC(F)))  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &trans  &trans         &trans  &trans
+&trans  &trans  &trans             &trans             &trans                     &trans  &trans  &trans  &trans  &trans  &trans          &trans         &trans  &trans         &trans  &trans
             >;
         };
     };
