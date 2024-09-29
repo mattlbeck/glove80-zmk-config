@@ -261,12 +261,12 @@
 
         rectangle {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                                                                         &trans             &trans           &trans             &trans         &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &trans             &trans           &trans             &trans         &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &kp LC(LA(D))      &kp LC(LA(F))    &kp LC(LA(G))      &trans         &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &kp LC(LA(E))  &kp LC(LA(LEFT))   &kp LC(LA(M))    &kp LC(LA(RIGHT))  &kp LC(LA(T))  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &kp LC(LA(MINUS))  &kp LC(LA(RET))  &kp LC(LA(EQUAL))  &trans         &trans
-&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                 &trans             &trans           &trans             &trans         &trans
+&trans  &trans  &trans  &trans  &trans                                                                         &trans                &trans           &trans                 &trans         &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &trans                &trans           &trans                 &trans         &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &kp LC(LA(D))         &kp LC(LA(F))    &kp LC(LA(G))          &trans         &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                                  &kp LC(LA(E))  &kp LC(LA(LEFT))      &kp LC(LA(M))    &kp LC(LA(RIGHT))      &kp LC(LA(T))  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &kp LC(LA(MINUS))     &kp LC(LA(RET))  &kp LC(LA(EQUAL))      &trans         &trans
+&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                 &kp LS(LA(LC(LEFT)))  &trans           &kp LS(LA(LC(RIGHT)))  &trans         &trans
             >;
         };
 
