@@ -50,3 +50,7 @@ What follows are notes on each layer and whether it  it currently in use
 
  Additional notable features:
   - I have modifiers lining the homerow when using layer 0, cursor, and mouse layers.
+
+## Keymap SVG
+
+This repo also contains a build pipeline to create SVGs of the keyboard layout and all its layers. This uses the python utility keymap-drawer to generate the SVGs from the keymap.json file. The resulting SVG is commited as keymap.svg in the root of this repo.
