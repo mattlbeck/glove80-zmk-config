@@ -222,7 +222,7 @@
 &trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &kp LC(LA(D))         &kp LC(LA(F))       &kp LC(LA(G))          &trans         &trans
 &trans  &trans  &trans  &trans  &trans  &trans                                                  &kp LC(LA(E))  &kp LC(LA(LEFT))      &kp LC(LA(M))       &kp LC(LA(RIGHT))      &kp LC(LA(T))  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &kp LC(LA(LS(LEFT)))  &kp LG(W)           &kp LC(LA(LS(RIGHT)))  &trans         &trans
-&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                 &kp LC(LS(TAB))       &trans              &kp LC(TAB)            &trans         &trans
+&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                 &kp LS(LA(LC(LG(LEFT))))    &trans              &kp LS(LA(LC(LG(RIGHT))))            &trans         &trans
             >;
         };
 
@@ -234,17 +234,6 @@
 &trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &kp LS(LA(LC(LEFT)))  &trans  &kp LS(LA(LC(RIGHT)))  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans                &trans  &trans                 &trans  &trans
 &trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans          &trans                &trans  &trans                 &trans  &trans
-            >;
-        };
-
-        window {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans                                                                  &trans                    &trans                    &trans                     &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &trans                    &trans                    &trans                     &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &trans                    &kp LA(LC(LS(LG(UP))))    &trans                     &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &kp LS(LA(LC(LG(LEFT))))  &kp LS(LA(LC(LG(DOWN))))  &kp LS(LC(LA(LG(RIGHT))))  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans                    &kp LS(LA(LC(LG(F))))     &kp LS(LA(LC(LG(N))))      &trans  &trans
-&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans          &trans                    &trans                    &trans                     &trans  &trans
             >;
         };
 
