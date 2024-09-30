@@ -29,3 +29,24 @@ To locate your firmware files and reflash your Glove80...
 6. Flash the firmware to Glove80 according to the user documentation on the official Glove80 Glove80 Support website (linked above)
 
 Your keyboard is now ready to use.
+
+## Keymap Guide
+
+The keymap is purely for MacOS and is a work-in-progress that is heavily integrated with my hammerspoon configuration and additional tools that I used.
+
+ - See my dotfiles repo: 
+
+What follows are notes on each layer and whether it  it currently in use
+
+ 1. colemak-dh. Keyboard layout with some frequently used symbols along the bottom
+ 2. sympad. A combination of symbols and a numpad on the right hand side
+ 3. cursor: Cursor navigation with copy/paste functions on the inner columns
+ 3. mouse: mouse control, clicking, and scrolling with copy/paste on the inner columns
+ 4. screen_nav: uses [Rectangle](https://rectangleapp.com/) to position and tile windows with a focus on widescreen monitor usage. Then there are keys to navigate tiled windows and tabs within tabbed programs.
+ 5. switcher: unused
+ 6. window: unused
+ 7. Amethyst: unused
+ 8. magic: glove80 magic functions - bluetooth, RGB, bootloader access and reset.
+
+ Additional notable features:
+  - I have modifiers lining the homerow when using layer 0, cursor, and mouse layers.

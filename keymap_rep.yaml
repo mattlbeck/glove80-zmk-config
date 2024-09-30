@@ -1,0 +1,731 @@
+layout: {qmk_keyboard: glove80}
+layers:
+  colemak-dh:
+  - F1
+  - F2
+  - F3
+  - F4
+  - F5
+  - F6
+  - F7
+  - F8
+  - F9
+  - F10
+  - {type: trans}
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+  - '0'
+  - VOL UP
+  - caps word
+  - Q
+  - W
+  - F
+  - P
+  - B
+  - J
+  - L
+  - U
+  - Y
+  - ;
+  - VOL DN
+  - $$mdi:keyboard-tab$$
+  - {t: A, h: LCTRL}
+  - {t: R, h: LEFT ALT}
+  - {t: S, h: LGUI}
+  - {t: T, h: LEFT SHIFT}
+  - G
+  - M
+  - {t: N, h: RIGHT SHIFT}
+  - {t: E, h: RGUI}
+  - {t: I, h: RALT}
+  - {t: O, h: RCTRL}
+  - MUTE
+  - {t: mouse, h: toggle}
+  - Z
+  - X
+  - C
+  - D
+  - V
+  - {t: '$$mdi:backspace$$', h: sympad}
+  - {t: PG UP, h: switcher}
+  - PAGE DOWN
+  - $$mdi:undo$$
+  - $$mdi:redo$$
+  - {t: '$$mdi:backspace-reverse$$', h: sympad}
+  - K
+  - H
+  - {t: ',', h: mouse}
+  - .
+  - {t: /, h: \}
+  - PLAY PAUSE
+  - {t: '&rgb_ug_status_macro', h: magic}
+  - '!'
+  - (
+  - )
+  - _
+  - {t: '$$mdi:keyboard-space$$', h: cursor}
+  - {t: '$$mdi:keyboard-return$$', h: screen_nav}
+  - search
+  - $$mdi:home-search$$
+  - $$mdi:keyboard-esc$$
+  - {t: '$$mdi:minus-box-outline$$', h: mouse}
+  - '-'
+  - '['
+  - ']'
+  - '?'
+  - {t: '&rgb_ug_status_macro', h: magic}
+  sympad:
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - <
+  - '>'
+  - '7'
+  - '8'
+  - '9'
+  - ''
+  - ''
+  - ''
+  - ''
+  - '~'
+  - ''''
+  - '"'
+  - '`'
+  - +
+  - '4'
+  - '5'
+  - '6'
+  - ''
+  - ''
+  - ''
+  - '&'
+  - '#'
+  - '!'
+  - ':'
+  - '@'
+  - '='
+  - '1'
+  - '2'
+  - '3'
+  - '%'
+  - ''
+  - ''
+  - ^
+  - '{'
+  - '}'
+  - $
+  - '|'
+  - {t: '$$mdi:backspace$$', type: held}
+  - UP ARROW
+  - DOWN
+  - $$mdi:undo$$
+  - $$mdi:redo$$
+  - $$mdi:backspace-reverse$$
+  - '*'
+  - '0'
+  - ','
+  - .
+  - {t: /, h: \}
+  - ''
+  - ''
+  - '!'
+  - (
+  - )
+  - _
+  - $$mdi:keyboard-space$$
+  - $$mdi:keyboard-return$$
+  - search
+  - $$mdi:home-search$$
+  - $$mdi:keyboard-esc$$
+  - $$mdi:keyboard-tab$$
+  - '-'
+  - '['
+  - ']'
+  - '?'
+  - ''
+  cursor:
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Gui+ LEFT
+  - UP ARROW
+  - Gui+ RIGHT
+  - Gui+ X
+  - Gui+ X
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - LEFT ARROW
+  - DOWN ARROW
+  - RIGHT
+  - Gui+ C
+  - Gui+ C
+  - {t: Ctl+Sft+ TAB, h: LEFT SHIFT}
+  - {t: Gui+ W, h: RIGHT GUI}
+  - {t: Ctl+ TAB, h: RIGHT ALT}
+  - RIGHT CONTROL
+  - ''
+  - ''
+  - ''
+  - Alt+ LEFT
+  - Gui+ F
+  - Alt+ RIGHT
+  - Gui+ V
+  - $$mdi:backspace$$
+  - ''
+  - ''
+  - $$mdi:undo$$
+  - $$mdi:redo$$
+  - $$mdi:backspace-reverse$$
+  - Gui+ V
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - HOME
+  - PG UP
+  - PG DN
+  - END
+  - {t: '$$mdi:keyboard-space$$', type: held}
+  - $$mdi:keyboard-return$$
+  - search
+  - $$mdi:home-search$$
+  - Alt+ ESCAPE
+  - $$mdi:keyboard-tab$$
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  mouse:
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Meh+ E
+  - '&mmv MOVE_UP'
+  - Meh+ N
+  - Gui+ X
+  - Gui+ X
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - '&mmv MOVE_LEFT'
+  - '&mmv MOVE_DOWN'
+  - '&mmv MOVE_RIGHT'
+  - Gui+ C
+  - Gui+ C
+  - {t: Meh+ Y, h: RSHFT}
+  - RGUI
+  - {t: Meh+ L, h: RALT}
+  - RALT
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - '&msc SCRL_UP'
+  - '&msc SCRL_DOWN'
+  - Gui+ V
+  - '&mkp MCLK'
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Gui+ V
+  - {type: trans}
+  - {t: 'Meh+ ,', type: held}
+  - Meh+ .
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Ctl+ DOWN
+  - Ctl+ UP
+  - '&mkp LCLK'
+  - '&mkp RCLK'
+  - search
+  - $$mdi:home-search$$
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  screen_nav:
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Ctl+Alt+ -
+  - Ctl+Alt+ RETURN
+  - Ctl+Alt+ =
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - $$win_left$$
+  - Ctl+Alt+ F
+  - Ctl+Alt+ G
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Ctl+Alt+ E
+  - Ctl+Alt+ LEFT
+  - Ctl+Alt+ M
+  - Ctl+Alt+ RIGHT
+  - Ctl+Alt+ T
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Meh+ LEFT
+  - Gui+ W
+  - Meh+ RIGHT
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: held}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Ctl+Sft+ TAB
+  - {type: trans}
+  - Ctl+ TAB
+  - {type: trans}
+  - {type: trans}
+  switcher:
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Meh+ LEFT
+  - {type: trans}
+  - Meh+ RIGHT
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: held}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  window:
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Hyper+ UP
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Hyper+ LEFT
+  - Hyper+ DOWN
+  - Hyper+ RIGHT
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Hyper+ F
+  - Hyper+ N
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  Amethyst:
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Sft+Alt+ SPACE
+  - Meh+ H
+  - Sft+Alt+ SPACE
+  - {type: trans}
+  - {type: trans}
+  - Sft+Alt+ J
+  - {type: trans}
+  - Sft+Alt+ K
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - Meh+ ,
+  - {type: trans}
+  - Meh+ .
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  - {type: trans}
+  magic:
+  - BT CLR
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - BT CLR ALL
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - RGB SPI
+  - RGB SAI
+  - RGB HUI
+  - RGB BRI
+  - RGB TOG
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - '&bootloader'
+  - RGB SPD
+  - RGB SAD
+  - RGB HUD
+  - RGB BRD
+  - RGB EFF
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - '&bootloader'
+  - '&sys_reset'
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - '&bt_2'
+  - '&bt_3'
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - '&sys_reset'
+  - {type: held}
+  - ''
+  - ''
+  - ''
+  - ''
+  - '&bt_0'
+  - '&bt_1'
+  - OUT USB
+  - ''
+  - ''
+  - RGB TOG
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
