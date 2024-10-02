@@ -217,12 +217,12 @@
 
         screen_nav {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                                                                         &trans                &trans              &trans                 &trans         &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &kp LC(LA(MINUS))     &kp LC(LA(RETURN))  &kp LC(LA(EQUAL))      &trans         &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans         &kp LC(LA(D))         &kp LC(LA(F))       &kp LC(LA(G))          &trans         &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &kp LC(LA(E))  &kp LC(LA(LEFT))      &kp LC(LA(M))       &kp LC(LA(RIGHT))      &kp LC(LA(T))  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &kp LC(LA(LS(LEFT)))  &kp LG(W)           &kp LC(LA(LS(RIGHT)))  &trans         &trans
-&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans                 &kp LS(LA(LC(LG(LEFT))))    &trans              &kp LS(LA(LC(LG(RIGHT))))            &trans         &trans
+&trans  &trans                            &trans                 &trans                        &trans                                                                                                                              &trans                    &trans              &trans                     &trans                        &trans
+&trans  &trans                            &trans                 &trans                        &trans                 &trans                                                                             &trans                    &kp LC(LA(MINUS))         &kp LC(LA(RETURN))  &kp LC(LA(EQUAL))          &trans                        &trans
+&trans  &trans                            &trans                 &trans                        &trans                 &trans                                                                             &trans                    &kp LC(LA(D))             &kp LC(LA(F))       &kp LC(LA(G))              &trans                        &trans
+&trans  &kp LG(LC(LA(LS(LEFT_BRACKET))))  &kp LS(LC(LA(LG(L))))  &kp LS(LA(LC(LG(NUMBER_1))))  &kp LA(LS(LG(LC(R))))  &kp LS(LA(LC(LG(RIGHT_BRACKET))))                                                  &kp LC(LA(E))             &kp LC(LA(LEFT))          &kp LC(LA(M))       &kp LC(LA(RIGHT))          &kp LC(LA(T))                 &trans
+&trans  &trans                            &kp LS(LA(LC(LG(A))))  &kp LS(LA(LC(LG(S))))         &kp LS(LA(LC(LG(D))))  &trans                             &trans  &trans  &trans  &trans  &trans  &trans  &kp LS(LA(LC(LG(DOWN))))  &kp LC(LA(LS(LEFT)))      &kp LG(W)           &kp LC(LA(LS(RIGHT)))      &kp LS(LA(LC(LG(UP_ARROW))))  &trans
+&trans  &trans                            &trans                 &trans                        &trans                                                    &trans  &trans  &trans  &trans  &trans  &trans                            &kp LS(LA(LC(LG(LEFT))))  &trans              &kp LS(LA(LC(LG(RIGHT))))  &trans                        &trans
             >;
         };
 
