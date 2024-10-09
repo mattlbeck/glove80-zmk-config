@@ -206,12 +206,12 @@
 
         mouse {
             bindings = <
-&trans  &trans  &trans             &trans          &trans                                                                                                     &trans                   &trans                 &trans                  &trans    &trans
-&trans  &trans  &trans             &trans          &trans             &trans                                                                       &trans     &trans                   &trans                 &trans                  &trans    &trans
-&trans  &trans  &kp LC(LS(LA(E)))  &mmv MOVE_UP    &kp LC(LS(LA(N)))  &kp LG(X)                                                                    &kp LG(X)  &trans                   &trans                 &trans                  &trans    &trans
-&trans  &trans  &mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_RIGHT    &kp LG(C)                                                                    &kp LG(C)  &mt RSHFT LC(LS(LA(Y)))  &kp RGUI               &mt RALT LC(LS(LA(L)))  &kp RALT  &trans
-&trans  &trans  &trans             &msc SCRL_UP    &msc SCRL_DOWN     &kp LG(V)  &mkp MCLK  &trans     &trans       &trans         &trans  &trans  &kp LG(V)  &trans                   &kp LC(LS(LA(COMMA)))  &kp LC(LS(LA(PERIOD)))  &trans    &trans
-&trans  &trans  &trans             &kp LC(DOWN)    &kp LC(UP)                    &mkp LCLK  &mkp RCLK  &kp LG(TAB)  &kp LG(SPACE)  &trans  &trans             &trans                   &trans                 &trans                  &trans    &trans
+&trans  &trans  &trans             &trans          &trans                                                                                                                             &trans                   &trans                 &trans                  &trans    &trans
+&trans  &trans  &trans             &trans          &trans             &kp LS(LA(LC(LG(C))))                                                                    &kp LS(LA(LC(LG(C))))  &trans                   &trans                 &trans                  &trans    &trans
+&trans  &trans  &kp LC(LS(LA(E)))  &mmv MOVE_UP    &kp LC(LS(LA(N)))  &kp LG(X)                                                                                &kp LG(X)              &trans                   &trans                 &trans                  &trans    &trans
+&trans  &trans  &mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_RIGHT    &kp LG(C)                                                                                &kp LG(C)              &mt RSHFT LC(LS(LA(Y)))  &kp RGUI               &mt RALT LC(LS(LA(L)))  &kp RALT  &trans
+&trans  &trans  &trans             &msc SCRL_UP    &msc SCRL_DOWN     &kp LG(V)              &mkp MCLK  &trans     &trans       &trans         &trans  &trans  &kp LG(V)              &trans                   &kp LC(LS(LA(COMMA)))  &kp LC(LS(LA(PERIOD)))  &trans    &trans
+&trans  &trans  &trans             &kp LC(DOWN)    &kp LC(UP)                                &mkp LCLK  &mkp RCLK  &kp LG(TAB)  &kp LG(SPACE)  &trans  &trans                         &trans                   &trans                 &trans                  &trans    &trans
             >;
         };
 
