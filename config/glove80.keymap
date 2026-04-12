@@ -84,28 +84,16 @@
 //
 
 #define MOUSE_SCROLL_TIME_TO_MAXIMUM_SPEED 450
-#define ZMK_MOUSE_DEFAULT_MOVE_VAL MOUSE_MOTION_MAXIMUM_SPEED
-#define ZMK_MOUSE_DEFAULT_SCRL_VAL MOUSE_SCROLL_MAXIMUM_SPEED
+#define ZMK_POINTING_DEFAULT_MOVE_VAL MOUSE_MOTION_MAXIMUM_SPEED
+#define ZMK_POINTING_DEFAULT_SCRL_VAL MOUSE_SCROLL_MAXIMUM_SPEED
 
-#include <dt-bindings/zmk/mouse.h>
+#include <dt-bindings/zmk/pointing.h>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/outputs.h>
-#include <dt-bindings/zmk/pointing.h>
 #include <dt-bindings/zmk/rgb.h>
 
-&mmv {
-    delay-ms = <MOUSE_MOTION_DELAY>;
-    acceleration-exponent = <MOUSE_MOTION_ACCELERATION_EXPONENT>;
-    time-to-max-speed-ms = <MOUSE_MOTION_TIME_TO_MAXIMUM_SPEED>;
-};
-
-&msc {
-    delay-ms = <MOUSE_SCROLL_DELAY>;
-    acceleration-exponent = <MOUSE_SCROLL_ACCELERATION_EXPONENT>;
-    time-to-max-speed-ms = <MOUSE_SCROLL_TIME_TO_MAXIMUM_SPEED>;
-};
 
 &mt { flavor = "balanced"; };
 

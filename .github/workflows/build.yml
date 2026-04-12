@@ -11,8 +11,8 @@ jobs:
           submodules: recursive
       - uses: actions/checkout@v4
         with:
-          repository: bryanforbes/zmk
-          ref: 3111d4200d87662097dd67061174689c5a1625eb 
+          repository: moergo-sc/zmk
+          ref: main
           path: src
       - uses: cachix/install-nix-action@v25
         with:
