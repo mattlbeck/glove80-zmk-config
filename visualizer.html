@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Glove80 Keymap Visualizer</title>
+  <meta name="description" content="Interactive browser-based visualizer for MoErgo Glove80 ZMK keyboard layouts. Load your keymap file to explore all layers."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d13; --bg2: #12151e; --bg3: #181d2e;
+      --border: #1e2440; --border2: #2a3358;
+      --text: #e2e8f0; --muted: #4b5563;
+      --accent: #7c3aed; --r: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text);
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    /* ── header ── */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; max-width: 1440px; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;
+    }
+    .hbrand h1 {
+      font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em;
+      background: linear-gradient(135deg, #a78bfa, #06b6d4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hbrand p { color: var(--muted); margin-top: .25rem; font-size: .82rem; }
+    .hactions { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+
+    .btn {
+      display: flex; align-items: center; gap: .45rem;
+      padding: .52rem 1rem; border-radius: var(--r);
+      border: 1px solid var(--border2); background: var(--bg2); color: var(--text);
+      cursor: pointer; font-family: 'Inter', sans-serif; font-size: .8rem; font-weight: 500;
+      transition: all .18s; white-space: nowrap;
+    }
+    .btn:hover { background: var(--bg3); border-color: var(--accent); color: #a78bfa; }
+    .btn.primary { border-color: var(--accent); background: rgba(124,58,237,.15); color: #a78bfa; }
+    .btn.primary:hover { background: rgba(124,58,237,.3); }
+    .btn svg { flex-shrink: 0; }
+
+    /* ── status bar ── */
+    #status-bar {
+      width: 100%; max-width: 1440px; display: flex; align-items: center;
+      gap: .6rem; margin-bottom: 1rem; font-size: .78rem; color: var(--muted); min-height: 22px;
+    }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #4b5563;
+      flex-shrink: 0; transition: background .3s;
+    }
+    .dot.ok     { background: #10b981; }
+    .dot.err    { background: #ef4444; }
+    .dot.demo   { background: #f59e0b; }
+    .dot.spin   { background: #3b82f6; animation: blink .7s ease infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+    /* ── drop overlay ── */
+    #drop-overlay {
+      position: fixed; inset: 0; background: rgba(7,8,15,.85);
+      backdrop-filter: blur(6px); display: none;
+      align-items: center; justify-content: center; z-index: 100;
+    }
+    #drop-overlay.show { display: flex; }
+    .drop-box {
+      border: 2px dashed var(--accent); border-radius: 20px;
+      padding: 3.5rem 5rem; text-align: center;
+      animation: pulse-border 1.2s ease infinite;
+    }
+    @keyframes pulse-border { 0%,100%{border-color:#7c3aed} 50%{border-color:#06b6d4} }
+    .drop-box .di { font-size: 3rem; margin-bottom: .75rem; }
+    .drop-box h2  { font-size: 1.3rem; font-weight: 600; margin-bottom: .4rem; }
+    .drop-box p   { color: var(--muted); font-size: .85rem; }
+    .drop-box code { color: #a78bfa; }
+
+    /* ── tabs ── */
+    .tabs {
+      display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 1.25rem; width: 100%; max-width: 1440px;
+    }
+    .tab {
+      padding: .35rem .9rem; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg2); color: var(--muted); cursor: pointer;
+      font-size: .78rem; font-weight: 500; transition: all .15s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .tab:hover  { border-color: var(--accent); color: var(--text); }
+    .tab.active { color: #fff; border-color: transparent; }
+
+    /* ── legend ── */
+    .legend {
+      display: flex; gap: .9rem; justify-content: center;
+      margin-bottom: 1.25rem; flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: .35rem; font-size: .72rem; color: var(--muted); }
+    .swatch { width: 12px; height: 12px; border-radius: 3px; }
+
+    /* ── keyboard canvas ── */
+    .kb-wrap { width: 100%; max-width: 1440px; overflow-x: auto; }
+    #kb { display: block; width: 100%; height: auto; overflow: visible; }
+
+    /* key fills */
+    .t-alpha   { fill: #181d2e; stroke: #2a3358;           }
+    .t-mod     { fill: #0d2545; stroke: #1a4080;           }
+    .t-layer   { fill: #1a0d40; stroke: #3d1f9e;           }
+    .t-special { fill: #162414; stroke: #275230;           }
+    .t-media   { fill: #0d2220; stroke: #184538;           }
+    .t-trans   { fill: none;    stroke: #1d2440; stroke-dasharray: 4 3; }
+    .t-empty   { fill: none;    stroke: #111628;           }
+
+    /* key text colours */
+    .c-alpha   { fill: #c8d4ea; }
+    .c-mod     { fill: #60a5fa; }
+    .c-layer   { fill: #a78bfa; }
+    .c-special { fill: #6ee7b7; }
+    .c-media   { fill: #34d399; }
+    .c-trans   { fill: #2d3860; }
+    .c-empty   { fill: none;    }
+
+    .key-main { font-family:'JetBrains Mono',monospace; font-weight:600; text-anchor:middle; dominant-baseline:middle; }
+    .key-sub  { font-family:'JetBrains Mono',monospace; font-weight:400; text-anchor:middle; dominant-baseline:middle; opacity:.6; }
+    .key-group { cursor: default; }
+    .key-group:hover rect   { filter: brightness(1.5); }
+    .key-group:hover        { filter: drop-shadow(0 3px 10px rgba(124,58,237,.45)); }
+
+    .lbl      { fill:#25305a; font-size:10px; font-family:'Inter',sans-serif;
+                font-weight:600; text-anchor:middle; letter-spacing:.08em; text-transform:uppercase; }
+    .div-line { stroke:#1a2040; stroke-width:1; stroke-dasharray:5 4; }
+
+    /* ── tooltip ── */
+    #tip {
+      position: fixed; background: #1a1f35; border: 1px solid #2a3358;
+      border-radius: 7px; padding: .4rem .65rem;
+      font-size: .75rem; font-family: 'JetBrains Mono', monospace; color: #c8d4ea;
+      pointer-events: none; display: none; z-index: 200;
+      max-width: 300px; word-break: break-all;
+    }
+
+    /* ── keyboard area ── */
+    #kb-area { width: 100%; display: none; flex-direction: column; align-items: center; }
+    #kb-area.show { display: flex; }
+
+    .shortcuts {
+      font-size: .7rem; color: var(--muted); margin-top: .65rem; text-align: center;
+    }
+    .shortcuts kbd {
+      display: inline-block; padding: 1px 5px; border: 1px solid #2a3358;
+      border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+      font-size: .68rem; background: var(--bg2); color: #9ca3af;
+    }
+
+    /* parse error box */
+    #err-box {
+      display: none; width: 100%; max-width: 1440px;
+      margin-bottom: 1rem; padding: .75rem 1rem;
+      border: 1px solid #7f1d1d; background: rgba(127,29,29,.15);
+      border-radius: var(--r); font-size: .8rem; color: #fca5a5;
+      font-family: 'JetBrains Mono', monospace; white-space: pre-wrap; word-break: break-all;
+    }
+
+    #file-input { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- drag-and-drop overlay -->
+<div id="drop-overlay">
+  <div class="drop-box">
+    <div class="di">⌨️</div>
+    <h2>Drop your keymap</h2>
+    <p>Release to load <code>glove80.keymap</code></p>
+  </div>
+</div>
+
+<!-- tooltip -->
+<div id="tip"></div>
+
+<input type="file" id="file-input" accept=".keymap,.dtsi,.txt">
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="hbrand">
+    <h1>Glove80 Keymap Visualizer</h1>
+    <p id="subtitle">MoErgo Glove80 · Interactive layer explorer</p>
+  </div>
+  <div class="hactions">
+    <button class="btn primary" id="load-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      Load Keymap
+    </button>
+  </div>
+</header>
+
+<div id="status-bar">
+  <span class="dot spin" id="dot"></span>
+  <span id="status-txt">Auto-loading config/glove80.keymap…</span>
+</div>
+
+<div id="err-box"></div>
+
+<!-- ── KEYBOARD AREA ── -->
+<div id="kb-area">
+  <div class="tabs" id="tabs"></div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="swatch" style="background:#181d2e;border:1px solid #2a3358"></span>Alpha</span>
+    <span class="legend-item"><span class="swatch" style="background:#0d2545;border:1px solid #1a4080"></span>HRM / Mod-tap</span>
+    <span class="legend-item"><span class="swatch" style="background:#1a0d40;border:1px solid #3d1f9e"></span>Layer tap/hold</span>
+    <span class="legend-item"><span class="swatch" style="background:#162414;border:1px solid #275230"></span>Special</span>
+    <span class="legend-item"><span class="swatch" style="background:#0d2220;border:1px solid #184538"></span>Media / Mouse</span>
+    <span class="legend-item"><span class="swatch" style="background:none;border:1px dashed #1d2440"></span>Transparent</span>
+  </div>
+
+  <div class="kb-wrap">
+    <svg id="kb" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="shortcuts">
+    Press <kbd>0</kbd>–<kbd>9</kbd> to switch layers &nbsp;·&nbsp; <kbd>←</kbd> <kbd>→</kbd> to step through
+  </div>
+</div>
+
+<script>
+// ── Physical layout: from MoErgo glove80-layouts.dtsi ─────────────────────
+// [x, y, rot_centideg, pivot_x, pivot_y]  (100 centiunits = 1 key-width)
+const RAW = [
+  // 0-9: top row (no outer-pinky in top row)
+  [   0,  50,     0,    0,    0],[  100,  50,     0,    0,    0],
+  [ 200,   0,     0,    0,    0],[  300,   0,     0,    0,    0],[  400,   0,     0,    0,    0],
+  [1300,   0,     0,    0,    0],[1400,   0,     0,    0,    0],[1500,   0,     0,    0,    0],
+  [1600,  50,     0,    0,    0],[1700,  50,     0,    0,    0],
+  // 10-21: row 1
+  [   0, 150,     0,    0,    0],[  100, 150,     0,    0,    0],
+  [ 200, 100,     0,    0,    0],[  300, 100,     0,    0,    0],[  400, 100,     0,    0,    0],[  500, 100,     0,    0,    0],
+  [1200, 100,     0,    0,    0],[1300, 100,     0,    0,    0],[1400, 100,     0,    0,    0],[1500, 100,     0,    0,    0],
+  [1600, 150,     0,    0,    0],[1700, 150,     0,    0,    0],
+  // 22-33: row 2
+  [   0, 250,     0,    0,    0],[  100, 250,     0,    0,    0],
+  [ 200, 200,     0,    0,    0],[  300, 200,     0,    0,    0],[  400, 200,     0,    0,    0],[  500, 200,     0,    0,    0],
+  [1200, 200,     0,    0,    0],[1300, 200,     0,    0,    0],[1400, 200,     0,    0,    0],[1500, 200,     0,    0,    0],
+  [1600, 250,     0,    0,    0],[1700, 250,     0,    0,    0],
+  // 34-45: row 3
+  [   0, 350,     0,    0,    0],[  100, 350,     0,    0,    0],
+  [ 200, 300,     0,    0,    0],[  300, 300,     0,    0,    0],[  400, 300,     0,    0,    0],[  500, 300,     0,    0,    0],
+  [1200, 300,     0,    0,    0],[1300, 300,     0,    0,    0],[1400, 300,     0,    0,    0],[1500, 300,     0,    0,    0],
+  [1600, 350,     0,    0,    0],[1700, 350,     0,    0,    0],
+  // 46-51: row 4 left main
+  [   0, 450,     0,    0,    0],[  100, 450,     0,    0,    0],
+  [ 200, 400,     0,    0,    0],[  300, 400,     0,    0,    0],[  400, 400,     0,    0,    0],[  500, 400,     0,    0,    0],
+  // 52-54: left inner thumb  (rotate about pivot 450, 925)
+  [ 400, 450,  3000,  450,  925],[ 400, 450,  4500,  450,  925],[ 400, 450,  6000,  450,  925],
+  // 55-57: right inner thumb (rotate about pivot 1350, 925)
+  [1300, 450, -6000, 1350,  925],[1300, 450, -4500, 1350,  925],[1300, 450, -3000, 1350,  925],
+  // 58-63: row 4 right main
+  [1200, 400,     0,    0,    0],[1300, 400,     0,    0,    0],[1400, 400,     0,    0,    0],[1500, 400,     0,    0,    0],
+  [1600, 450,     0,    0,    0],[1700, 450,     0,    0,    0],
+  // 64-68: row 5 left main
+  [   0, 550,     0,    0,    0],[  100, 550,     0,    0,    0],
+  [ 200, 500,     0,    0,    0],[  300, 500,     0,    0,    0],[  400, 500,     0,    0,    0],
+  // 69-71: left outer thumb  (rotate about pivot 450, 925)
+  [ 400, 550,  2000,  450,  925],[ 400, 550,  4000,  450,  925],[ 400, 550,  6000,  450,  925],
+  // 72-74: right outer thumb (rotate about pivot 1350, 925)
+  [1300, 550, -6000, 1350,  925],[1300, 550, -4000, 1350,  925],[1300, 550, -2000, 1350,  925],
+  // 75-79: row 5 right main
+  [1300, 500,     0,    0,    0],[1400, 500,     0,    0,    0],[1500, 500,     0,    0,    0],
+  [1600, 550,     0,    0,    0],[1700, 550,     0,    0,    0],
+];
+
+const KW = 42, GAP = 5, STEP = KW + GAP, PAD = 14;
+const cu = v => PAD + (v / 100) * STEP;
+
+const POSITIONS = RAW.map(([x, y, r, rpx, rpy]) => ({
+  x: cu(x), y: cu(y), rot: r / 100, rpx: cu(rpx), rpy: cu(rpy),
+}));
+
+const SVG_W = Math.ceil(cu(1800) + PAD * 2);
+
+function rotPt(x, y, deg, rpx, rpy) {
+  const rad = deg * Math.PI / 180, dx = x - rpx, dy = y - rpy;
+  return { x: rpx + dx * Math.cos(rad) - dy * Math.sin(rad),
+           y: rpy + dx * Math.sin(rad) + dy * Math.cos(rad) };
+}
+let maxY = cu(680);
+RAW.forEach(([x, y, rot, rpx, rpy]) => {
+  if (rot === 0) { maxY = Math.max(maxY, cu(y) + KW); return; }
+  const deg = rot / 100;
+  [[cu(x),cu(y)],[cu(x)+KW,cu(y)],[cu(x),cu(y)+KW],[cu(x)+KW,cu(y)+KW]].forEach(([kx,ky]) => {
+    maxY = Math.max(maxY, rotPt(kx, ky, deg, cu(rpx), cu(rpy)).y);
+  });
+});
+const SVG_H = Math.ceil(maxY + PAD * 3);
+
+// ── Key label helpers ──────────────────────────────────────────────────────
+const SYM = {
+  SPACE:'␣', ENTER:'↵', BACKSPACE:'⌫', TAB:'⇥', ESCAPE:'Esc', DELETE:'Del',
+  UP_ARROW:'↑', DOWN_ARROW:'↓', LEFT_ARROW:'←', RIGHT_ARROW:'→',
+  UP:'↑', DOWN:'↓', LEFT:'←', RIGHT:'→',
+  PAGE_UP:'PgUp', PAGE_DOWN:'PgDn', PG_UP:'PgUp', PG_DN:'PgDn', HOME:'Home', END:'End',
+  EXCLAMATION:'!', AT_SIGN:'@', HASH:'#', DOLLAR:'$', PERCENT:'%',
+  CARET:'^', AMPS:'&', ASTERISK:'*',
+  LEFT_PARENTHESIS:'(', RIGHT_PARENTHESIS:')',
+  MINUS:'-', PLUS:'+', EQUAL:'=', UNDERSCORE:'_',
+  LEFT_BRACKET:'[', RIGHT_BRACKET:']', LEFT_BRACE:'{', RIGHT_BRACE:'}',
+  BACKSLASH:'\\', PIPE:'|', NON_US_BACKSLASH:'\\',
+  SEMI:';', COLON:':', SQT:"'", DOUBLE_QUOTES:'"', DQT:'"',
+  GRAVE:'`', TILDE:'~', COMMA:',', DOT:'.', PERIOD:'.', SLASH:'/', QUESTION:'?',
+  LESS_THAN:'<', GREATER_THAN:'>',
+  C_VOL_UP:'Vol+', C_VOL_DN:'Vol-', K_MUTE:'Mute',
+  C_PLAY_PAUSE:'⏯', C_NEXT:'⏭', C_PREV:'⏮',
+  F1:'F1',F2:'F2',F3:'F3',F4:'F4',F5:'F5',
+  F6:'F6',F7:'F7',F8:'F8',F9:'F9',F10:'F10',F11:'F11',F12:'F12',
+  N0:'0',N1:'1',N2:'2',N3:'3',N4:'4',N5:'5',N6:'6',N7:'7',N8:'8',N9:'9',
+  NUMBER_0:'0',NUMBER_1:'1',NUMBER_2:'2',NUMBER_3:'3',NUMBER_4:'4',
+  NUMBER_5:'5',NUMBER_6:'6',NUMBER_7:'7',NUMBER_8:'8',NUMBER_9:'9',
+  LCTRL:'⌃', RCTRL:'⌃', LEFT_CTRL:'⌃', RIGHT_CONTROL:'⌃',
+  LALT:'⌥',  RALT:'⌥',  LEFT_ALT:'⌥',  RIGHT_ALT:'⌥',
+  LGUI:'⌘',  RGUI:'⌘',  LEFT_GUI:'⌘',  RIGHT_GUI:'⌘',
+  LEFT_SHIFT:'⇧', RIGHT_SHIFT:'⇧', LSHIFT:'⇧', RSHIFT:'⇧', LSHFT:'⇧', RSHFT:'⇧',
+};
+const MOD_W = { LG:'⌘', RG:'⌘', LC:'⌃', RC:'⌃', LA:'⌥', RA:'⌥', LS:'⇧', RS:'⇧' };
+const HRM = {
+  LCTRL:'⌃', RCTRL:'⌃', LEFT_CTRL:'⌃', RIGHT_CONTROL:'⌃',
+  LALT:'⌥',  RALT:'⌥',  LEFT_ALT:'⌥',  RIGHT_ALT:'⌥',
+  LGUI:'⌘',  RGUI:'⌘',  LEFT_GUI:'⌘',  RIGHT_GUI:'⌘',
+  LEFT_SHIFT:'⇧', RIGHT_SHIFT:'⇧', LSHIFT:'⇧', RSHIFT:'⇧', LSHFT:'⇧', RSHFT:'⇧',
+  BACKSLASH:'\\', NON_US_BACKSLASH:'\\',
+};
+
+function unwrap(s) {
+  const m = s.match(/^([LR][GCAS])\((.+)\)$/);
+  return m ? { mod: m[1], inner: m[2] } : null;
+}
+function symKey(k) {
+  if (SYM[k]) return SYM[k];
+  const w = unwrap(k);
+  if (w) { if (unwrap(w.inner)) return '✦'; return (MOD_W[w.mod] || w.mod) + symKey(w.inner); }
+  if (/^[A-Z0-9]$/.test(k)) return k;
+  return k.length > 6 ? k.slice(0, 5) + '…' : k;
+}
+
+function parseBinding(b) {
+  b = (b || '').trim();
+  if (!b || b === '&none')    return { main: '', type: 'empty' };
+  if (b === '&trans')         return { main: '▽', type: 'trans' };
+  if (b === '&caps_word')     return { main: 'CAPS', sub: 'word', type: 'special' };
+  if (b === '&bootloader')    return { main: 'Boot', type: 'special' };
+  if (b === '&sys_reset')     return { main: 'Rst', type: 'special' };
+  if (b === '&layer_td')      return { main: 'TD', sub: 'layer', type: 'layer' };
+  if (b.startsWith('&magic')) return { main: 'MAG', sub: 'magic', type: 'special' };
+  if (b.startsWith('&rgb_ug ')) {
+    return { main: 'RGB', sub: b.slice(8).replace('RGB_', '').slice(0, 4), type: 'special' };
+  }
+  if (b.startsWith('&bt_'))  return { main: 'BT', sub: b.slice(4), type: 'special' };
+  if (b.startsWith('&bt ')) {
+    const p = b.slice(4).split(' ');
+    return { main: 'BT', sub: (p[1] || p[0]).replace('BT_', ''), type: 'special' };
+  }
+  if (b.startsWith('&out '))  return { main: 'OUT', sub: b.slice(5).replace('OUT_', ''), type: 'special' };
+  if (b.startsWith('&mkp '))  return { main: { LCLK:'🖱L', RCLK:'🖱R', MCLK:'🖱M' }[b.slice(5)] || b.slice(5), type: 'media' };
+  if (b.startsWith('&mmv '))  return { main: { MOVE_UP:'↑', MOVE_DOWN:'↓', MOVE_LEFT:'←', MOVE_RIGHT:'→' }[b.slice(5)] || '?', sub: 'move', type: 'media' };
+  if (b.startsWith('&msc '))  return { main: { SCRL_UP:'↑', SCRL_DOWN:'↓' }[b.slice(5)] || '?', sub: 'scrl', type: 'media' };
+  if (b.startsWith('&tog '))  return { main: 'TOG', sub: b.slice(5), type: 'layer' };
+  if (b.startsWith('&to '))   return { main: 'TO',  sub: b.slice(4), type: 'layer' };
+  if (b.startsWith('&mo '))   return { main: 'MO',  sub: b.slice(4), type: 'layer' };
+  if (b.startsWith('&lt ')) {
+    const r = b.slice(4), sp = r.indexOf(' ');
+    return { main: symKey(r.slice(sp + 1)), sub: 'L' + r.slice(0, sp), type: 'layer' };
+  }
+  if (b.startsWith('&mt ')) {
+    const r = b.slice(4), sp = r.indexOf(' ');
+    return { main: symKey(r.slice(sp + 1)), sub: HRM[r.slice(0, sp)] || r.slice(0, sp).slice(0, 3), type: 'mod' };
+  }
+  if (b.startsWith('&kp ')) {
+    const k = b.slice(4);
+    const isMedia = ['C_VOL_UP','C_VOL_DN','K_MUTE','C_PLAY_PAUSE','C_NEXT','C_PREV'].includes(k);
+    const isFn    = /^F\d+$/.test(k);
+    return { main: symKey(k), type: isMedia ? 'media' : isFn ? 'special' : 'alpha' };
+  }
+  return { main: b.replace(/^&/, '').slice(0, 7), type: 'special' };
+}
+
+// ── ZMK keymap parser ─────────────────────────────────────────────────────
+// Number of additional positional args each behavior takes in a bindings list.
+// Unknown behaviors (custom macros like &bt_0) default to 0.
+const BCELLS = {
+  kp: 1, mt: 2, lt: 2, mo: 1, to: 1, tog: 1,
+  trans: 0, none: 0, bootloader: 0, sys_reset: 0, caps_word: 0, layer_td: 0,
+  bt: 1,        // &bt BT_SEL takes 2; detected dynamically below
+  rgb_ug: 1, out: 1, mmv: 1, msc: 1, mkp: 1,
+  magic: 2,
+};
+
+function tokenizeBindings(str) {
+  const toks = str.trim().split(/\s+/).filter(Boolean);
+  const out = [];
+  let i = 0;
+  while (i < toks.length) {
+    const t = toks[i];
+    if (!t.startsWith('&')) { i++; continue; }
+    const name = t.slice(1);
+    let n = BCELLS[name] ?? 0;
+    // &bt BT_SEL <profile> needs one extra arg
+    if (name === 'bt' && toks[i + 1] === 'BT_SEL') n = 2;
+    const parts = [t, ...toks.slice(i + 1, i + 1 + n)];
+    out.push(parts.join(' '));
+    i += 1 + n;
+  }
+  return out;
+}
+
+// Extract the content between matching { } starting at startIdx (index of '{')
+function extractBlock(text, startIdx) {
+  let depth = 0;
+  for (let i = startIdx; i < text.length; i++) {
+    if (text[i] === '{') depth++;
+    else if (text[i] === '}') { depth--; if (depth === 0) return { content: text.slice(startIdx + 1, i), end: i }; }
+  }
+  return null;
+}
+
+function parseZMKKeymap(raw) {
+  // Strip block comments then line comments
+  let text = raw.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/\/\/.*/g, '');
+
+  // Locate  keymap { ... }
+  const km = /keymap\s*\{/.exec(text);
+  if (!km) throw new Error('No "keymap {" block found.\nIs this a ZMK .keymap file?');
+  const brace = text.indexOf('{', km.index);
+  const kmBlock = extractBlock(text, brace);
+  if (!kmBlock) throw new Error('Malformed keymap block (unbalanced braces).');
+
+  const inner = kmBlock.content;
+  const layers = [];
+
+  // Match each sub-block:  layer-name { ... }
+  // Layer names can contain letters, digits, underscores, hyphens
+  const re = /([a-zA-Z_][a-zA-Z0-9_-]*)\s*\{/g;
+  let m;
+  while ((m = re.exec(inner)) !== null) {
+    const name = m[1];
+    // Skip the  compatible = "zmk,keymap";  entry (it has no braces, but guard anyway)
+    if (name === 'compatible') continue;
+
+    // Find the opening '{' and extract balanced block
+    const bp = m.index + m[0].lastIndexOf('{');
+    const lb = extractBlock(inner, bp);
+    if (!lb) continue;
+    re.lastIndex = lb.end + 1;   // skip past this block's closing }
+
+    // Pull bindings = < ... >;
+    const bm = lb.content.match(/bindings\s*=\s*<([\s\S]*?)>\s*;/);
+    if (!bm) continue;
+
+    const bindings = tokenizeBindings(bm[1]);
+    if (bindings.length === 0) continue;
+
+    layers.push({ name, bindings });
+  }
+
+  if (layers.length === 0)
+    throw new Error('No layers with bindings found.\nCheck that the file contains a valid ZMK keymap block.');
+  return layers;
+}
+
+// ── Color palette ──────────────────────────────────────────────────────────
+const PALETTE = [
+  '#7c3aed','#0891b2','#059669','#d97706',
+  '#9333ea','#e11d48','#8b5cf6','#f59e0b',
+  '#3b82f6','#10b981','#f97316','#ec4899',
+];
+
+// Capitalise each word, turn - and _ into spaces
+const fmt = n => n.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+// ── App state ──────────────────────────────────────────────────────────────
+let LAYERS = [], curIdx = 0;
+
+// ── SVG renderer ──────────────────────────────────────────────────────────
+function svgEl(tag, attrs, txt) {
+  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+  if (txt !== undefined) e.textContent = txt;
+  return e;
+}
+
+function renderKey(parent, pos, info, raw) {
+  const { x, y, rot, rpx, rpy } = pos;
+  const g = svgEl('g', { class: 'key-group', 'data-b': raw || '' });
+  if (rot !== 0) g.setAttribute('transform', `rotate(${rot},${rpx},${rpy})`);
+
+  g.appendChild(svgEl('rect', { x, y, width: KW, height: KW, rx: 5, ry: 5, class: `key-bg t-${info.type}` }));
+
+  if (info.type === 'empty') { parent.appendChild(g); return; }
+  if (info.type === 'trans') {
+    g.appendChild(svgEl('text', { x: x+KW/2, y: y+KW/2+1, class:'key-main c-trans', 'font-size':'13', 'dominant-baseline':'middle', 'text-anchor':'middle' }, '▽'));
+    parent.appendChild(g); return;
+  }
+
+  const hasSub = !!info.sub;
+  const cx = x + KW / 2;
+  const mainY = hasSub ? y + KW / 2 - 5 : y + KW / 2 + 1;
+  const ml = info.main ? info.main.length : 0;
+  const ms = ml > 5 ? '8' : ml > 3 ? '10' : '13';
+
+  if (info.main) g.appendChild(svgEl('text', { x: cx, y: mainY, class:`key-main c-${info.type}`, 'font-size':ms, 'dominant-baseline':'middle', 'text-anchor':'middle' }, info.main));
+  if (hasSub)   g.appendChild(svgEl('text', { x: cx, y: y+KW-8, class:`key-sub c-${info.type}`,  'font-size':'8',  'dominant-baseline':'middle', 'text-anchor':'middle' }, info.sub));
+  parent.appendChild(g);
+}
+
+function renderLayer(idx) {
+  curIdx = idx;
+  const svg = document.getElementById('kb');
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', `0 0 ${SVG_W} ${SVG_H}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  svg.removeAttribute('width'); svg.removeAttribute('height');
+
+  svg.appendChild(svgEl('rect', { x:0, y:0, width:SVG_W, height:SVG_H, fill:'#0b0d13', rx:10 }));
+
+  const ly = 10;
+  svg.appendChild(svgEl('text', { x:cu(250),  y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Left Hand'));
+  svg.appendChild(svgEl('text', { x:cu(850),  y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Thumb Cluster'));
+  svg.appendChild(svgEl('text', { x:cu(1450), y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Right Hand'));
+  svg.appendChild(svgEl('line', { x1:cu(575),  y1:ly+8, x2:cu(575),  y2:SVG_H-10, class:'div-line' }));
+  svg.appendChild(svgEl('line', { x1:cu(1125), y1:ly+8, x2:cu(1125), y2:SVG_H-10, class:'div-line' }));
+
+  LAYERS[idx].bindings.forEach((b, i) => {
+    if (!POSITIONS[i]) return;
+    renderKey(svg, POSITIONS[i], parseBinding(b), b);
+  });
+
+  // Attach tooltip events to keys that have meaningful bindings
+  svg.querySelectorAll('.key-group').forEach(g => {
+    const raw = g.getAttribute('data-b');
+    if (!raw || raw === '&none' || raw === '&trans') return;
+    g.addEventListener('mouseenter', e => showTip(e, raw));
+    g.addEventListener('mousemove',  moveTip);
+    g.addEventListener('mouseleave', hideTip);
+  });
+}
+
+// ── Tooltip ────────────────────────────────────────────────────────────────
+const tipEl = document.getElementById('tip');
+function showTip(e, txt) { tipEl.textContent = txt; tipEl.style.display = 'block'; moveTip(e); }
+function moveTip(e) {
+  const w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+  let l = e.clientX + 12, t = e.clientY - h - 8;
+  if (l + w > window.innerWidth - 10) l = e.clientX - w - 12;
+  if (t < 5) t = e.clientY + 12;
+  tipEl.style.left = l + 'px'; tipEl.style.top = t + 'px';
+}
+function hideTip() { tipEl.style.display = 'none'; }
+
+// ── Tabs ───────────────────────────────────────────────────────────────────
+function buildTabs() {
+  const c = document.getElementById('tabs');
+  c.innerHTML = '';
+  LAYERS.forEach((layer, i) => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (i === curIdx ? ' active' : '');
+    b.id = `tab-${i}`;
+    b.textContent = `${i}  ${fmt(layer.name)}`;
+    const color = layer.color;
+    b.addEventListener('click', () => selectLayer(i));
+    if (i === curIdx) { b.style.background = color; b.style.borderColor = color; }
+    c.appendChild(b);
+  });
+}
+
+function selectLayer(i) {
+  curIdx = i;
+  document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); t.style.background = ''; t.style.borderColor = ''; });
+  const b = document.getElementById(`tab-${i}`);
+  if (b) { b.classList.add('active'); b.style.background = LAYERS[i].color; b.style.borderColor = LAYERS[i].color; }
+  renderLayer(i);
+}
+
+// ── Load layers ────────────────────────────────────────────────────────────
+function loadLayers(layers, label, isDemo) {
+  LAYERS = layers.map((l, i) => ({ ...l, color: PALETTE[i % PALETTE.length] }));
+  curIdx = 0;
+
+  const dot = document.getElementById('dot');
+  const txt = document.getElementById('status-txt');
+  const sub = document.getElementById('subtitle');
+
+  if (isDemo) {
+    dot.className = 'dot demo';
+    txt.textContent = 'Demo data (auto-load not available via file://) — drag & drop or click "Load Keymap"';
+  } else {
+    dot.className = 'dot ok';
+    txt.textContent = `${label}  ·  ${LAYERS.length} layer${LAYERS.length !== 1 ? 's' : ''}`;
+    sub.textContent = `${label} · ${LAYERS.length} layers · MoErgo Glove80`;
+  }
+
+  document.getElementById('err-box').style.display = 'none';
+  document.getElementById('kb-area').classList.add('show');
+  buildTabs();
+  renderLayer(0);
+}
+
+function showError(msg) {
+  const dot = document.getElementById('dot');
+  const txt = document.getElementById('status-txt');
+  const box = document.getElementById('err-box');
+  dot.className = 'dot err';
+  txt.textContent = 'Parse error — see details below';
+  box.textContent = msg;
+  box.style.display = 'block';
+}
+
+// ── File input ─────────────────────────────────────────────────────────────
+function handleFile(file) {
+  if (!file) return;
+  const dot = document.getElementById('dot');
+  const txt = document.getElementById('status-txt');
+  dot.className = 'dot spin';
+  txt.textContent = `Parsing ${file.name}…`;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      loadLayers(parseZMKKeymap(e.target.result), file.name, false);
+    } catch (err) {
+      showError(err.message);
+      console.error(err);
+    }
+  };
+  r.readAsText(file);
+}
+
+const fileInput = document.getElementById('file-input');
+document.getElementById('load-btn').addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+// Drag & drop anywhere on the page
+let dc = 0;
+document.addEventListener('dragenter', e => { e.preventDefault(); dc++; document.getElementById('drop-overlay').classList.add('show'); });
+document.addEventListener('dragleave', () => { dc--; if (dc <= 0) { dc = 0; document.getElementById('drop-overlay').classList.remove('show'); } });
+document.addEventListener('dragover',  e => e.preventDefault());
+document.addEventListener('drop', e => {
+  e.preventDefault(); dc = 0;
+  document.getElementById('drop-overlay').classList.remove('show');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+// ── Keyboard shortcuts ─────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || !LAYERS.length) return;
+  if (/^[0-9]$/.test(e.key)) { const i = +e.key; if (i < LAYERS.length) selectLayer(i); }
+  else if (e.key === 'ArrowRight') selectLayer((curIdx + 1) % LAYERS.length);
+  else if (e.key === 'ArrowLeft')  selectLayer((curIdx - 1 + LAYERS.length) % LAYERS.length);
+});
+
+// ── Demo fallback data (two layers — encourages loading the real keymap) ──
+const DEMO = [
+  { name: 'colemak-dh', bindings: [
+    '&kp F1','&kp F2','&kp F3','&kp F4','&kp F5',
+    '&kp F6','&kp F7','&kp F8','&kp F9','&kp F10',
+    '&trans','&kp N1','&kp ASTERISK','&kp EQUAL','&kp PLUS','&kp N5',
+    '&kp N6','&kp SQT','&kp DOUBLE_QUOTES','&kp GRAVE','&kp N0','&kp C_VOL_UP',
+    '&caps_word','&kp Q','&kp W','&kp F','&kp P','&kp B',
+    '&kp J','&kp L','&kp U','&kp Y','&kp SEMI','&kp C_VOL_DN',
+    '&kp TAB','&mt LCTRL A','&mt LEFT_ALT R','&mt LGUI S','&mt LEFT_SHIFT T','&kp G',
+    '&kp M','&mt RIGHT_SHIFT N','&mt RGUI E','&mt RALT I','&mt RCTRL O','&kp K_MUTE',
+    '&tog 3','&kp Z','&kp X','&kp C','&kp D','&kp V',
+    '&lt 1 BACKSPACE','&lt 5 PG_UP','&kp PAGE_DOWN',
+    '&kp LG(Z)','&kp LS(LG(Z))','&lt 1 TAB',
+    '&kp K','&kp H','&lt 3 COMMA','&kp DOT','&mt BACKSLASH SLASH','&kp C_PLAY_PAUSE',
+    '&magic 7 0','&kp EXCLAMATION','&kp LEFT_PARENTHESIS','&kp RIGHT_PARENTHESIS','&kp UNDERSCORE',
+    '&lt 2 SPACE','&lt 4 ENTER','&kp LG(LS(LA(LC(SPACE))))','&kp LG(SPACE)','&kp ESCAPE','&lt 3 LC(LA(LS(LG(H))))',
+    '&kp MINUS','&kp LEFT_BRACKET','&kp RIGHT_BRACKET','&kp QUESTION','&magic 7 0',
+  ]},
+  { name: 'sympad', bindings: [
+    '&none','&none','&none','&none','&none','&none','&none','&none','&none','&none',
+    '&none','&none','&kp ASTERISK','&kp EQUAL','&kp PLUS','&kp LESS_THAN',
+    '&kp GREATER_THAN','&kp N7','&kp N8','&kp N9','&none','&none',
+    '&none','&none','&kp TILDE','&kp SQT','&kp DQT','&kp GRAVE',
+    '&kp PLUS','&kp N4','&kp N5','&kp N6','&none','&none',
+    '&none','&kp AMPS','&kp HASH','&kp EXCLAMATION','&kp COLON','&kp AT_SIGN',
+    '&kp EQUAL','&kp N1','&kp N2','&kp N3','&kp PERCENT','&none',
+    '&none','&kp CARET','&kp LEFT_BRACE','&kp RIGHT_BRACE','&kp DOLLAR','&kp PIPE',
+    '&kp BACKSPACE','&kp UP_ARROW','&kp DOWN',
+    '&kp LG(Z)','&kp LS(LG(Z))','&kp DELETE',
+    '&kp ASTERISK','&kp N0','&kp COMMA','&kp PERIOD','&mt NON_US_BACKSLASH SLASH','&none',
+    '&none','&kp EXCLAMATION','&kp LEFT_PARENTHESIS','&kp RIGHT_PARENTHESIS','&kp UNDERSCORE',
+    '&kp SPACE','&kp ENTER','&kp LG(TAB)','&kp LG(SPACE)','&kp ESCAPE','&kp TAB',
+    '&kp MINUS','&kp LEFT_BRACKET','&kp RIGHT_BRACKET','&kp QUESTION','&none',
+  ]},
+];
+
+// ── Init: try to auto-load the keymap via fetch, then fall back to demo ────
+async function init() {
+  try {
+    // Relative to the HTML file — works when opened via a local HTTP server
+    const resp = await fetch('./config/glove80.keymap', { cache: 'no-cache' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    loadLayers(parseZMKKeymap(text), 'glove80.keymap', false);
+  } catch (_) {
+    loadLayers(DEMO, 'demo', true);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
