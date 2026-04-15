@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Glove80 Keymap Visualizer</title>
-  <meta name="description" content="Interactive browser-based visualizer for MoErgo Glove80 ZMK keyboard layouts. Load your keymap file to explore all layers."/>
+  <meta name="description" content="Interactive browser-based visualizer and editor for Glove80. Load, edit, and save your keymap."/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -12,7 +12,8 @@
       --bg: #0b0d13; --bg2: #12151e; --bg3: #181d2e;
       --border: #1e2440; --border2: #2a3358;
       --text: #e2e8f0; --muted: #4b5563;
-      --accent: #7c3aed; --r: 10px;
+      --accent: #7c3aed; --accent-hover: #8b5cf6;
+      --r: 10px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -41,9 +42,12 @@
       cursor: pointer; font-family: 'Inter', sans-serif; font-size: .8rem; font-weight: 500;
       transition: all .18s; white-space: nowrap;
     }
-    .btn:hover { background: var(--bg3); border-color: var(--accent); color: #a78bfa; }
+    .btn:hover:not(:disabled) { background: var(--bg3); border-color: var(--accent); color: #a78bfa; }
     .btn.primary { border-color: var(--accent); background: rgba(124,58,237,.15); color: #a78bfa; }
-    .btn.primary:hover { background: rgba(124,58,237,.3); }
+    .btn.primary:hover:not(:disabled) { background: rgba(124,58,237,.3); }
+    .btn.success { border-color: #10b981; background: rgba(16,185,129,.15); color: #34d399; }
+    .btn.success:hover:not(:disabled) { background: rgba(16,185,129,.3); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn svg { flex-shrink: 0; }
 
     /* ── status bar ── */
@@ -75,9 +79,6 @@
     }
     @keyframes pulse-border { 0%,100%{border-color:#7c3aed} 50%{border-color:#06b6d4} }
     .drop-box .di { font-size: 3rem; margin-bottom: .75rem; }
-    .drop-box h2  { font-size: 1.3rem; font-weight: 600; margin-bottom: .4rem; }
-    .drop-box p   { color: var(--muted); font-size: .85rem; }
-    .drop-box code { color: #a78bfa; }
 
     /* ── tabs ── */
     .tabs {
@@ -114,604 +115,659 @@
     .t-trans   { fill: none;    stroke: #1d2440; stroke-dasharray: 4 3; }
     .t-empty   { fill: none;    stroke: #111628;           }
 
-    /* key text colours */
-    .c-alpha   { fill: #c8d4ea; }
-    .c-mod     { fill: #60a5fa; }
-    .c-layer   { fill: #a78bfa; }
-    .c-special { fill: #6ee7b7; }
-    .c-media   { fill: #34d399; }
-    .c-trans   { fill: #2d3860; }
+    /* text colours */
+    .c-alpha   { fill: #c8d4ea; } .c-mod { fill: #60a5fa; } .c-layer { fill: #a78bfa; }
+    .c-special { fill: #6ee7b7; } .c-media { fill: #34d399; } .c-trans { fill: #2d3860; }
     .c-empty   { fill: none;    }
 
     .key-main { font-family:'JetBrains Mono',monospace; font-weight:600; text-anchor:middle; dominant-baseline:middle; }
     .key-sub  { font-family:'JetBrains Mono',monospace; font-weight:400; text-anchor:middle; dominant-baseline:middle; opacity:.6; }
-    .key-group { cursor: default; }
+    
+    .key-group { cursor: pointer; transition: filter 0.15s; }
     .key-group:hover rect   { filter: brightness(1.5); }
     .key-group:hover        { filter: drop-shadow(0 3px 10px rgba(124,58,237,.45)); }
+    
+    .key-group.selected rect { stroke: #a78bfa; stroke-width: 2.5; filter: brightness(1.3); }
+    .key-group.selected { filter: drop-shadow(0 0 12px rgba(167,139,250,.6)); }
 
-    .lbl      { fill:#25305a; font-size:10px; font-family:'Inter',sans-serif;
-                font-weight:600; text-anchor:middle; letter-spacing:.08em; text-transform:uppercase; }
+    /* ── interact UI ── */
+    #edit-panel {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: rgba(18, 21, 30, 0.95); backdrop-filter: blur(12px);
+      border: 1px solid var(--accent); border-radius: 12px;
+      padding: 1rem 1.5rem; display: none; align-items: center; gap: 1.5rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.3);
+      z-index: 50; flex-wrap: wrap; justify-content: center; width: max-content;
+    }
+    #edit-panel.show { display: flex; animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1); }
+    
+    .ep-info { display: flex; flex-direction: column; gap: 0.2rem; }
+    .ep-label { font-size: 0.7rem; color: #a78bfa; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ep-val { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; color: #fff; }
+    .ep-prompt { background: var(--bg3); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; color: #d1d5db; display: flex; align-items: center; gap: 0.5rem; border: 1px dashed var(--border2); }
+    
+    #swap-banner {
+      width: 100%; max-width: 1440px; background: rgba(5, 150, 105, 0.15);
+      border: 1px solid #10b981; border-radius: var(--r); padding: 0.75rem 1.5rem;
+      margin-bottom: 1rem; color: #34d399; font-weight: 500; font-size: 0.85rem;
+      display: none; align-items: center; justify-content: space-between;
+    }
+    #swap-banner.show { display: flex; animation: fadeIn 0.2s; }
+
+    @keyframes slideUp { from { opacity:0; transform:translate(-50%,20px) } to { opacity:1; transform:translate(-50%,0) } }
+    @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+
+    /* ── Select Modal ── */
+    #select-modal-bg {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+      z-index: 1000; display: none; align-items: center; justify-content: center;
+    }
+    #select-modal-bg.show { display: flex; }
+    .modal {
+      background: var(--bg2); width: 90%; max-width: 800px; max-height: 85vh;
+      border-radius: 12px; border: 1px solid var(--border2); display: flex; flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden;
+    }
+    .modal-hdr {
+      padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-hdr h2 { font-size: 1.1rem; font-weight: 600; }
+    .modal-hdr button { background: none; border: none; color: var(--muted); cursor: pointer; padding: 0.2rem; }
+    .modal-hdr button:hover { color: #fff; }
+    
+    .modal-body { padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; }
+    .cat-group h3 { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+    .cat-keys { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    
+    .kb-btn {
+      padding: 0.4rem 0.8rem; background: var(--bg3); border: 1px solid var(--border2);
+      border-radius: 6px; color: #c8d4ea; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; cursor: pointer; transition: all 0.1s;
+    }
+    .kb-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-1px); }
+
+    .lbl { fill:#25305a; font-size:10px; font-family:'Inter',sans-serif; font-weight:600; text-anchor:middle; letter-spacing:.08em; text-transform:uppercase; }
     .div-line { stroke:#1a2040; stroke-width:1; stroke-dasharray:5 4; }
 
-    /* ── tooltip ── */
-    #tip {
-      position: fixed; background: #1a1f35; border: 1px solid #2a3358;
-      border-radius: 7px; padding: .4rem .65rem;
-      font-size: .75rem; font-family: 'JetBrains Mono', monospace; color: #c8d4ea;
-      pointer-events: none; display: none; z-index: 200;
-      max-width: 300px; word-break: break-all;
-    }
-
-    /* ── keyboard area ── */
+    #tip { position: fixed; background: #1a1f35; border: 1px solid #2a3358; border-radius: 7px; padding: .4rem .65rem; font-size: .75rem; font-family: 'JetBrains Mono', monospace; color: #c8d4ea; pointer-events: none; display: none; z-index: 200; }
     #kb-area { width: 100%; display: none; flex-direction: column; align-items: center; }
     #kb-area.show { display: flex; }
-
-    .shortcuts {
-      font-size: .7rem; color: var(--muted); margin-top: .65rem; text-align: center;
-    }
-    .shortcuts kbd {
-      display: inline-block; padding: 1px 5px; border: 1px solid #2a3358;
-      border-radius: 4px; font-family: 'JetBrains Mono', monospace;
-      font-size: .68rem; background: var(--bg2); color: #9ca3af;
-    }
-
-    /* parse error box */
-    #err-box {
-      display: none; width: 100%; max-width: 1440px;
-      margin-bottom: 1rem; padding: .75rem 1rem;
-      border: 1px solid #7f1d1d; background: rgba(127,29,29,.15);
-      border-radius: var(--r); font-size: .8rem; color: #fca5a5;
-      font-family: 'JetBrains Mono', monospace; white-space: pre-wrap; word-break: break-all;
-    }
-
+    .shortcuts { font-size: .7rem; color: var(--muted); margin-top: .65rem; text-align: center; }
+    .shortcuts kbd { display: inline-block; padding: 1px 5px; border: 1px solid #2a3358; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: .68rem; background: var(--bg2); color: #9ca3af; }
+    #err-box { display: none; width: 100%; max-width: 1440px; margin-bottom: 1rem; padding: .75rem 1rem; border: 1px solid #7f1d1d; background: rgba(127,29,29,.15); border-radius: var(--r); font-size: .8rem; color: #fca5a5; font-family: 'JetBrains Mono', monospace; white-space: pre-wrap; word-break: break-all; }
     #file-input { display: none; }
   </style>
 </head>
 <body>
 
-<!-- drag-and-drop overlay -->
-<div id="drop-overlay">
-  <div class="drop-box">
-    <div class="di">⌨️</div>
-    <h2>Drop your keymap</h2>
-    <p>Release to load <code>glove80.keymap</code></p>
-  </div>
-</div>
-
-<!-- tooltip -->
+<div id="drop-overlay"><div class="drop-box"><div class="di">⌨️</div><h2>Drop your keymap</h2><p>Release to load</p></div></div>
 <div id="tip"></div>
-
 <input type="file" id="file-input" accept=".keymap,.dtsi,.txt">
 
-<!-- ── HEADER ── -->
 <header>
   <div class="hbrand">
     <h1>Glove80 Keymap Visualizer</h1>
-    <p id="subtitle">MoErgo Glove80 · Interactive layer explorer</p>
+    <p id="subtitle">MoErgo Glove80 · Interactive layout editor</p>
   </div>
   <div class="hactions">
-    <button class="btn primary" id="load-btn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="17 8 12 3 7 8"/>
-        <line x1="12" y1="3" x2="12" y2="15"/>
-      </svg>
-      Load Keymap
+    <button class="btn" id="load-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Load
+    </button>
+    <button class="btn success" id="save-btn" disabled>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save Keymap
     </button>
   </div>
 </header>
 
 <div id="status-bar">
   <span class="dot spin" id="dot"></span>
-  <span id="status-txt">Auto-loading config/glove80.keymap…</span>
+  <span id="status-txt">Waiting for keymap...</span>
 </div>
 
 <div id="err-box"></div>
 
-<!-- ── KEYBOARD AREA ── -->
+<div id="swap-banner">
+  <div style="display:flex;align-items:center;gap:.5rem">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10l5 5 5-5"/></svg>
+    <span><strong>Swap Mode:</strong> Click another key (on any layer) to swap its single-tap behavior with the selected key.</span>
+  </div>
+  <button class="btn" style="padding:.2rem .6rem" onclick="cancelSwap()">Cancel</button>
+</div>
+
 <div id="kb-area">
   <div class="tabs" id="tabs"></div>
-
   <div class="legend">
     <span class="legend-item"><span class="swatch" style="background:#181d2e;border:1px solid #2a3358"></span>Alpha</span>
-    <span class="legend-item"><span class="swatch" style="background:#0d2545;border:1px solid #1a4080"></span>HRM / Mod-tap</span>
-    <span class="legend-item"><span class="swatch" style="background:#1a0d40;border:1px solid #3d1f9e"></span>Layer tap/hold</span>
+    <span class="legend-item"><span class="swatch" style="background:#0d2545;border:1px solid #1a4080"></span>Mod-tap</span>
+    <span class="legend-item"><span class="swatch" style="background:#1a0d40;border:1px solid #3d1f9e"></span>Layer-tap</span>
     <span class="legend-item"><span class="swatch" style="background:#162414;border:1px solid #275230"></span>Special</span>
-    <span class="legend-item"><span class="swatch" style="background:#0d2220;border:1px solid #184538"></span>Media / Mouse</span>
     <span class="legend-item"><span class="swatch" style="background:none;border:1px dashed #1d2440"></span>Transparent</span>
   </div>
 
   <div class="kb-wrap">
     <svg id="kb" xmlns="http://www.w3.org/2000/svg"></svg>
   </div>
-
+  
   <div class="shortcuts">
-    Press <kbd>0</kbd>–<kbd>9</kbd> to switch layers &nbsp;·&nbsp; <kbd>←</kbd> <kbd>→</kbd> to step through
+    Press <kbd>0</kbd>–<kbd>9</kbd> layers · <kbd>←</kbd> <kbd>→</kbd> step · Click a key to edit
+  </div>
+</div>
+
+<!-- Edit Panel -->
+<div id="edit-panel">
+  <div class="ep-info">
+    <span class="ep-label">Currently Selected</span>
+    <span class="ep-val" id="ep-binding"></span>
+  </div>
+  <div class="ep-prompt">
+    <kbd style="font-family:inherit;font-size:.7rem;padding:2px 6px;border-radius:4px;background:#2a3358;color:#fff;border:1px solid #3d4a80">? Any Key</kbd>
+    Press a key to assign
+  </div>
+  <div style="display:flex;gap:.5rem">
+    <button class="btn primary" onclick="openSelectModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/><rect x="14" y="14" width="3" height="3"/></svg>
+      Select...
+    </button>
+    <button class="btn" onclick="startSwap()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+      Swap
+    </button>
+  </div>
+  <button class="btn" style="border:none;background:none" onclick="deselectKey()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
+<!-- Select Modal -->
+<div id="select-modal-bg">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h2>Select Key Assignment</h2>
+      <button onclick="closeSelectModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body" id="modal-cats"></div>
   </div>
 </div>
 
 <script>
-// ── Physical layout: from MoErgo glove80-layouts.dtsi ─────────────────────
-// [x, y, rot_centideg, pivot_x, pivot_y]  (100 centiunits = 1 key-width)
-const RAW = [
-  // 0-9: top row (no outer-pinky in top row)
-  [   0,  50,     0,    0,    0],[  100,  50,     0,    0,    0],
-  [ 200,   0,     0,    0,    0],[  300,   0,     0,    0,    0],[  400,   0,     0,    0,    0],
-  [1300,   0,     0,    0,    0],[1400,   0,     0,    0,    0],[1500,   0,     0,    0,    0],
-  [1600,  50,     0,    0,    0],[1700,  50,     0,    0,    0],
-  // 10-21: row 1
-  [   0, 150,     0,    0,    0],[  100, 150,     0,    0,    0],
-  [ 200, 100,     0,    0,    0],[  300, 100,     0,    0,    0],[  400, 100,     0,    0,    0],[  500, 100,     0,    0,    0],
-  [1200, 100,     0,    0,    0],[1300, 100,     0,    0,    0],[1400, 100,     0,    0,    0],[1500, 100,     0,    0,    0],
-  [1600, 150,     0,    0,    0],[1700, 150,     0,    0,    0],
-  // 22-33: row 2
-  [   0, 250,     0,    0,    0],[  100, 250,     0,    0,    0],
-  [ 200, 200,     0,    0,    0],[  300, 200,     0,    0,    0],[  400, 200,     0,    0,    0],[  500, 200,     0,    0,    0],
-  [1200, 200,     0,    0,    0],[1300, 200,     0,    0,    0],[1400, 200,     0,    0,    0],[1500, 200,     0,    0,    0],
-  [1600, 250,     0,    0,    0],[1700, 250,     0,    0,    0],
-  // 34-45: row 3
-  [   0, 350,     0,    0,    0],[  100, 350,     0,    0,    0],
-  [ 200, 300,     0,    0,    0],[  300, 300,     0,    0,    0],[  400, 300,     0,    0,    0],[  500, 300,     0,    0,    0],
-  [1200, 300,     0,    0,    0],[1300, 300,     0,    0,    0],[1400, 300,     0,    0,    0],[1500, 300,     0,    0,    0],
-  [1600, 350,     0,    0,    0],[1700, 350,     0,    0,    0],
-  // 46-51: row 4 left main
-  [   0, 450,     0,    0,    0],[  100, 450,     0,    0,    0],
-  [ 200, 400,     0,    0,    0],[  300, 400,     0,    0,    0],[  400, 400,     0,    0,    0],[  500, 400,     0,    0,    0],
-  // 52-54: left inner thumb  (rotate about pivot 450, 925)
-  [ 400, 450,  3000,  450,  925],[ 400, 450,  4500,  450,  925],[ 400, 450,  6000,  450,  925],
-  // 55-57: right inner thumb (rotate about pivot 1350, 925)
-  [1300, 450, -6000, 1350,  925],[1300, 450, -4500, 1350,  925],[1300, 450, -3000, 1350,  925],
-  // 58-63: row 4 right main
-  [1200, 400,     0,    0,    0],[1300, 400,     0,    0,    0],[1400, 400,     0,    0,    0],[1500, 400,     0,    0,    0],
-  [1600, 450,     0,    0,    0],[1700, 450,     0,    0,    0],
-  // 64-68: row 5 left main
-  [   0, 550,     0,    0,    0],[  100, 550,     0,    0,    0],
-  [ 200, 500,     0,    0,    0],[  300, 500,     0,    0,    0],[  400, 500,     0,    0,    0],
-  // 69-71: left outer thumb  (rotate about pivot 450, 925)
-  [ 400, 550,  2000,  450,  925],[ 400, 550,  4000,  450,  925],[ 400, 550,  6000,  450,  925],
-  // 72-74: right outer thumb (rotate about pivot 1350, 925)
-  [1300, 550, -6000, 1350,  925],[1300, 550, -4000, 1350,  925],[1300, 550, -2000, 1350,  925],
-  // 75-79: row 5 right main
-  [1300, 500,     0,    0,    0],[1400, 500,     0,    0,    0],[1500, 500,     0,    0,    0],
-  [1600, 550,     0,    0,    0],[1700, 550,     0,    0,    0],
-];
-
+// ── Settings & Physical Layout ──
 const KW = 42, GAP = 5, STEP = KW + GAP, PAD = 14;
 const cu = v => PAD + (v / 100) * STEP;
 
-const POSITIONS = RAW.map(([x, y, r, rpx, rpy]) => ({
-  x: cu(x), y: cu(y), rot: r / 100, rpx: cu(rpx), rpy: cu(rpy),
-}));
+const RAW = [
+  [0,50,0,0,0],[100,50,0,0,0],[200,0,0,0,0],[300,0,0,0,0],[400,0,0,0,0],[1300,0,0,0,0],[1400,0,0,0,0],[1500,0,0,0,0],[1600,50,0,0,0],[1700,50,0,0,0],
+  [0,150,0,0,0],[100,150,0,0,0],[200,100,0,0,0],[300,100,0,0,0],[400,100,0,0,0],[500,100,0,0,0],[1200,100,0,0,0],[1300,100,0,0,0],[1400,100,0,0,0],[1500,100,0,0,0],[1600,150,0,0,0],[1700,150,0,0,0],
+  [0,250,0,0,0],[100,250,0,0,0],[200,200,0,0,0],[300,200,0,0,0],[400,200,0,0,0],[500,200,0,0,0],[1200,200,0,0,0],[1300,200,0,0,0],[1400,200,0,0,0],[1500,200,0,0,0],[1600,250,0,0,0],[1700,250,0,0,0],
+  [0,350,0,0,0],[100,350,0,0,0],[200,300,0,0,0],[300,300,0,0,0],[400,300,0,0,0],[500,300,0,0,0],[1200,300,0,0,0],[1300,300,0,0,0],[1400,300,0,0,0],[1500,300,0,0,0],[1600,350,0,0,0],[1700,350,0,0,0],
+  [0,450,0,0,0],[100,450,0,0,0],[200,400,0,0,0],[300,400,0,0,0],[400,400,0,0,0],[500,400,0,0,0],
+  [400,450,3000,450,925],[400,450,4500,450,925],[400,450,6000,450,925],
+  [1300,450,-6000,1350,925],[1300,450,-4500,1350,925],[1300,450,-3000,1350,925],
+  [1200,400,0,0,0],[1300,400,0,0,0],[1400,400,0,0,0],[1500,400,0,0,0],[1600,450,0,0,0],[1700,450,0,0,0],
+  [0,550,0,0,0],[100,550,0,0,0],[200,500,0,0,0],[300,500,0,0,0],[400,500,0,0,0],
+  [400,550,2000,450,925],[400,550,4000,450,925],[400,550,6000,450,925],
+  [1300,550,-6000,1350,925],[1300,550,-4000,1350,925],[1300,550,-2000,1350,925],
+  [1300,500,0,0,0],[1400,500,0,0,0],[1500,500,0,0,0],[1600,550,0,0,0],[1700,550,0,0,0],
+];
+const POSITIONS = RAW.map(([x,y,r,px,py]) => ({x:cu(x), y:cu(y), rot:r/100, rpx:cu(px), rpy:cu(py)}));
+const SVG_W = Math.ceil(cu(1800) + PAD*2);
+const SVG_H = 430; // Precalculated approx for fluid view
 
-const SVG_W = Math.ceil(cu(1800) + PAD * 2);
+// ── Globals ──
+let RAW_FILE_TEXT = null;
+let LAYERS = [];
+let curIdx = 0;
+let fileHandle = null;
 
-function rotPt(x, y, deg, rpx, rpy) {
-  const rad = deg * Math.PI / 180, dx = x - rpx, dy = y - rpy;
-  return { x: rpx + dx * Math.cos(rad) - dy * Math.sin(rad),
-           y: rpy + dx * Math.sin(rad) + dy * Math.cos(rad) };
-}
-let maxY = cu(680);
-RAW.forEach(([x, y, rot, rpx, rpy]) => {
-  if (rot === 0) { maxY = Math.max(maxY, cu(y) + KW); return; }
-  const deg = rot / 100;
-  [[cu(x),cu(y)],[cu(x)+KW,cu(y)],[cu(x),cu(y)+KW],[cu(x)+KW,cu(y)+KW]].forEach(([kx,ky]) => {
-    maxY = Math.max(maxY, rotPt(kx, ky, deg, cu(rpx), cu(rpy)).y);
-  });
-});
-const SVG_H = Math.ceil(maxY + PAD * 3);
+let selKey = null; // { layerIdx, keyIdx }
+let swapActive = false;
 
-// ── Key label helpers ──────────────────────────────────────────────────────
+// ── ZMK Label Config ──
 const SYM = {
   SPACE:'␣', ENTER:'↵', BACKSPACE:'⌫', TAB:'⇥', ESCAPE:'Esc', DELETE:'Del',
-  UP_ARROW:'↑', DOWN_ARROW:'↓', LEFT_ARROW:'←', RIGHT_ARROW:'→',
-  UP:'↑', DOWN:'↓', LEFT:'←', RIGHT:'→',
+  UP_ARROW:'↑', DOWN_ARROW:'↓', LEFT_ARROW:'←', RIGHT_ARROW:'→', UP:'↑', DOWN:'↓', LEFT:'←', RIGHT:'→',
   PAGE_UP:'PgUp', PAGE_DOWN:'PgDn', PG_UP:'PgUp', PG_DN:'PgDn', HOME:'Home', END:'End',
-  EXCLAMATION:'!', AT_SIGN:'@', HASH:'#', DOLLAR:'$', PERCENT:'%',
-  CARET:'^', AMPS:'&', ASTERISK:'*',
-  LEFT_PARENTHESIS:'(', RIGHT_PARENTHESIS:')',
-  MINUS:'-', PLUS:'+', EQUAL:'=', UNDERSCORE:'_',
-  LEFT_BRACKET:'[', RIGHT_BRACKET:']', LEFT_BRACE:'{', RIGHT_BRACE:'}',
-  BACKSLASH:'\\', PIPE:'|', NON_US_BACKSLASH:'\\',
-  SEMI:';', COLON:':', SQT:"'", DOUBLE_QUOTES:'"', DQT:'"',
-  GRAVE:'`', TILDE:'~', COMMA:',', DOT:'.', PERIOD:'.', SLASH:'/', QUESTION:'?',
-  LESS_THAN:'<', GREATER_THAN:'>',
-  C_VOL_UP:'Vol+', C_VOL_DN:'Vol-', K_MUTE:'Mute',
-  C_PLAY_PAUSE:'⏯', C_NEXT:'⏭', C_PREV:'⏮',
-  F1:'F1',F2:'F2',F3:'F3',F4:'F4',F5:'F5',
-  F6:'F6',F7:'F7',F8:'F8',F9:'F9',F10:'F10',F11:'F11',F12:'F12',
-  N0:'0',N1:'1',N2:'2',N3:'3',N4:'4',N5:'5',N6:'6',N7:'7',N8:'8',N9:'9',
-  NUMBER_0:'0',NUMBER_1:'1',NUMBER_2:'2',NUMBER_3:'3',NUMBER_4:'4',
-  NUMBER_5:'5',NUMBER_6:'6',NUMBER_7:'7',NUMBER_8:'8',NUMBER_9:'9',
-  LCTRL:'⌃', RCTRL:'⌃', LEFT_CTRL:'⌃', RIGHT_CONTROL:'⌃',
-  LALT:'⌥',  RALT:'⌥',  LEFT_ALT:'⌥',  RIGHT_ALT:'⌥',
-  LGUI:'⌘',  RGUI:'⌘',  LEFT_GUI:'⌘',  RIGHT_GUI:'⌘',
-  LEFT_SHIFT:'⇧', RIGHT_SHIFT:'⇧', LSHIFT:'⇧', RSHIFT:'⇧', LSHFT:'⇧', RSHFT:'⇧',
+  EXCLAMATION:'!', AT_SIGN:'@', HASH:'#', DOLLAR:'$', PERCENT:'%', CARET:'^', AMPS:'&', ASTERISK:'*',
+  LEFT_PARENTHESIS:'(', RIGHT_PARENTHESIS:')', MINUS:'-', PLUS:'+', EQUAL:'=', UNDERSCORE:'_',
+  LEFT_BRACKET:'[', RIGHT_BRACKET:']', LEFT_BRACE:'{', RIGHT_BRACE:'}', BACKSLASH:'\\', PIPE:'|',
+  SEMI:';', COLON:':', SQT:"'", DOUBLE_QUOTES:'"', DQT:'"', GRAVE:'`', TILDE:'~',
+  COMMA:',', DOT:'.', PERIOD:'.', SLASH:'/', QUESTION:'?', LESS_THAN:'<', GREATER_THAN:'>',
+  LCTRL:'⌃', RCTRL:'⌃', LALT:'⌥', RALT:'⌥', LGUI:'⌘', RGUI:'⌘', LSHIFT:'⇧', RSHIFT:'⇧',
 };
 const MOD_W = { LG:'⌘', RG:'⌘', LC:'⌃', RC:'⌃', LA:'⌥', RA:'⌥', LS:'⇧', RS:'⇧' };
-const HRM = {
-  LCTRL:'⌃', RCTRL:'⌃', LEFT_CTRL:'⌃', RIGHT_CONTROL:'⌃',
-  LALT:'⌥',  RALT:'⌥',  LEFT_ALT:'⌥',  RIGHT_ALT:'⌥',
-  LGUI:'⌘',  RGUI:'⌘',  LEFT_GUI:'⌘',  RIGHT_GUI:'⌘',
-  LEFT_SHIFT:'⇧', RIGHT_SHIFT:'⇧', LSHIFT:'⇧', RSHIFT:'⇧', LSHFT:'⇧', RSHFT:'⇧',
-  BACKSLASH:'\\', NON_US_BACKSLASH:'\\',
-};
-
-function unwrap(s) {
-  const m = s.match(/^([LR][GCAS])\((.+)\)$/);
-  return m ? { mod: m[1], inner: m[2] } : null;
-}
+function unwrap(s) { const m = s.match(/^([LR][GCAS])\((.+)\)$/); return m ? { mod: m[1], inner: m[2] } : null; }
 function symKey(k) {
   if (SYM[k]) return SYM[k];
-  const w = unwrap(k);
-  if (w) { if (unwrap(w.inner)) return '✦'; return (MOD_W[w.mod] || w.mod) + symKey(w.inner); }
-  if (/^[A-Z0-9]$/.test(k)) return k;
-  return k.length > 6 ? k.slice(0, 5) + '…' : k;
+  const w = unwrap(k); if (w) return (MOD_W[w.mod]||w.mod) + symKey(w.inner);
+  return /^[A-Z0-9]$/.test(k) ? k : k.length>6 ? k.slice(0,5)+'…' : k;
 }
 
 function parseBinding(b) {
-  b = (b || '').trim();
-  if (!b || b === '&none')    return { main: '', type: 'empty' };
-  if (b === '&trans')         return { main: '▽', type: 'trans' };
-  if (b === '&caps_word')     return { main: 'CAPS', sub: 'word', type: 'special' };
-  if (b === '&bootloader')    return { main: 'Boot', type: 'special' };
-  if (b === '&sys_reset')     return { main: 'Rst', type: 'special' };
-  if (b === '&layer_td')      return { main: 'TD', sub: 'layer', type: 'layer' };
-  if (b.startsWith('&magic')) return { main: 'MAG', sub: 'magic', type: 'special' };
-  if (b.startsWith('&rgb_ug ')) {
-    return { main: 'RGB', sub: b.slice(8).replace('RGB_', '').slice(0, 4), type: 'special' };
-  }
-  if (b.startsWith('&bt_'))  return { main: 'BT', sub: b.slice(4), type: 'special' };
-  if (b.startsWith('&bt ')) {
-    const p = b.slice(4).split(' ');
-    return { main: 'BT', sub: (p[1] || p[0]).replace('BT_', ''), type: 'special' };
-  }
-  if (b.startsWith('&out '))  return { main: 'OUT', sub: b.slice(5).replace('OUT_', ''), type: 'special' };
-  if (b.startsWith('&mkp '))  return { main: { LCLK:'🖱L', RCLK:'🖱R', MCLK:'🖱M' }[b.slice(5)] || b.slice(5), type: 'media' };
-  if (b.startsWith('&mmv '))  return { main: { MOVE_UP:'↑', MOVE_DOWN:'↓', MOVE_LEFT:'←', MOVE_RIGHT:'→' }[b.slice(5)] || '?', sub: 'move', type: 'media' };
-  if (b.startsWith('&msc '))  return { main: { SCRL_UP:'↑', SCRL_DOWN:'↓' }[b.slice(5)] || '?', sub: 'scrl', type: 'media' };
-  if (b.startsWith('&tog '))  return { main: 'TOG', sub: b.slice(5), type: 'layer' };
-  if (b.startsWith('&to '))   return { main: 'TO',  sub: b.slice(4), type: 'layer' };
-  if (b.startsWith('&mo '))   return { main: 'MO',  sub: b.slice(4), type: 'layer' };
+  b = (b||'').trim();
+  if (!b || b==='&none') return { main:'', type:'empty' };
+  if (b==='&trans')      return { main:'▽', type:'trans' };
+  if (b.startsWith('&tog ')) return { main:'TOG', sub:b.slice(5), type:'layer' };
+  if (b.startsWith('&mo '))  return { main:'MO',  sub:b.slice(4), type:'layer' };
   if (b.startsWith('&lt ')) {
-    const r = b.slice(4), sp = r.indexOf(' ');
-    return { main: symKey(r.slice(sp + 1)), sub: 'L' + r.slice(0, sp), type: 'layer' };
+    const sp = b.slice(4).indexOf(' ');
+    return { main:symKey(b.slice(4 + sp + 1)), sub:'L'+b.slice(4, 4+sp), type:'layer' };
   }
   if (b.startsWith('&mt ')) {
-    const r = b.slice(4), sp = r.indexOf(' ');
-    return { main: symKey(r.slice(sp + 1)), sub: HRM[r.slice(0, sp)] || r.slice(0, sp).slice(0, 3), type: 'mod' };
+    const sp = b.slice(4).indexOf(' ');
+    const modstr = b.slice(4, 4+sp);
+    return { main:symKey(b.slice(4 + sp + 1)), sub:(MOD_W[modstr]||modstr).slice(0,3), type:'mod' };
   }
-  if (b.startsWith('&kp ')) {
-    const k = b.slice(4);
-    const isMedia = ['C_VOL_UP','C_VOL_DN','K_MUTE','C_PLAY_PAUSE','C_NEXT','C_PREV'].includes(k);
-    const isFn    = /^F\d+$/.test(k);
-    return { main: symKey(k), type: isMedia ? 'media' : isFn ? 'special' : 'alpha' };
-  }
-  return { main: b.replace(/^&/, '').slice(0, 7), type: 'special' };
+  if (b.startsWith('&kp ')) return { main:symKey(b.slice(4)), type:'alpha' };
+  return { main:b.replace(/^&/,'').slice(0,6), type:'special' };
 }
 
-// ── ZMK keymap parser ─────────────────────────────────────────────────────
-// Number of additional positional args each behavior takes in a bindings list.
-// Unknown behaviors (custom macros like &bt_0) default to 0.
-const BCELLS = {
-  kp: 1, mt: 2, lt: 2, mo: 1, to: 1, tog: 1,
-  trans: 0, none: 0, bootloader: 0, sys_reset: 0, caps_word: 0, layer_td: 0,
-  bt: 1,        // &bt BT_SEL takes 2; detected dynamically below
-  rgb_ug: 1, out: 1, mmv: 1, msc: 1, mkp: 1,
-  magic: 2,
-};
+// ── Core Parsing & Mutations ──
+const BCELLS = { kp:1, mt:2, lt:2, mo:1, to:1, tog:1, magic:2, out:1, mmv:1, msc:1, mkp:1, rgb_ug:1, bt:1 };
 
 function tokenizeBindings(str) {
   const toks = str.trim().split(/\s+/).filter(Boolean);
-  const out = [];
-  let i = 0;
+  const out = []; let i = 0;
   while (i < toks.length) {
-    const t = toks[i];
-    if (!t.startsWith('&')) { i++; continue; }
-    const name = t.slice(1);
-    let n = BCELLS[name] ?? 0;
-    // &bt BT_SEL <profile> needs one extra arg
-    if (name === 'bt' && toks[i + 1] === 'BT_SEL') n = 2;
-    const parts = [t, ...toks.slice(i + 1, i + 1 + n)];
-    out.push(parts.join(' '));
+    const t = toks[i]; if (!t.startsWith('&')) { i++; continue; }
+    let n = BCELLS[t.slice(1)] ?? 0;
+    if (t === '&bt' && toks[i+1] === 'BT_SEL') n = 2;
+    out.push([t, ...toks.slice(i+1, i+1+n)].join(' '));
     i += 1 + n;
   }
   return out;
 }
 
-// Extract the content between matching { } starting at startIdx (index of '{')
-function extractBlock(text, startIdx) {
-  let depth = 0;
-  for (let i = startIdx; i < text.length; i++) {
-    if (text[i] === '{') depth++;
-    else if (text[i] === '}') { depth--; if (depth === 0) return { content: text.slice(startIdx + 1, i), end: i }; }
+function parseZMKKeymap(raw) {
+  const text = raw.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/\/\/.*/g, '');
+  const km = /keymap\s*\{/.exec(text);
+  if (!km) throw new Error('No "keymap {" block found.');
+  const inner = text.slice(km.index);
+  
+  const layers = [];
+  const re = /([a-zA-Z_][a-zA-Z0-9_-]*)\s*\{/g;
+  let m;
+  while((m = re.exec(inner)) !== null) {
+    if (m[1] === 'compatible') continue;
+    const blockStart = inner.indexOf('{', m.index);
+    let d=0, blockEnd=blockStart;
+    for(let i=blockStart; i<inner.length; i++){
+      if(inner[i]==='{') d++; else if(inner[i]==='}') {d--; if(d===0){blockEnd=i; break;}}
+    }
+    const chunk = inner.slice(blockStart, blockEnd);
+    const bm = chunk.match(/bindings\s*=\s*<([\s\S]*?)>\s*;/);
+    if(bm) layers.push({ name: m[1], bindings: tokenizeBindings(bm[1]) });
+    re.lastIndex = blockEnd;
+  }
+  return layers;
+}
+
+// Swaps/Updates the *Primary Tap Behavior* inside a ZMK binding while preserving layers/mods.
+function setPrimaryTap(b, newCode) {
+  b = b.trim();
+  if(!b || b==='&none' || b==='&trans') return `&kp ${newCode}`;
+  if(b.startsWith('&kp ')) return `&kp ${newCode}`;
+  if(b.startsWith('&mt ') || b.startsWith('&lt ')) {
+    const p = b.split(/\s+/);
+    if(p.length >= 3) { p[2] = newCode; return p.join(' '); }
+  }
+  // For mo/tog or exotic macros without taps, we fallback to replacing entirely
+  return `&kp ${newCode}`;
+}
+
+function getPrimaryTapCode(b) {
+  b = b.trim();
+  if(b.startsWith('&kp ')) return b.slice(4).split(/\s+/)[0];
+  if(b.startsWith('&mt ') || b.startsWith('&lt ')) {
+    const p = b.split(/\s+/); if(p.length >= 3) return p[2];
   }
   return null;
 }
 
-function parseZMKKeymap(raw) {
-  // Strip block comments then line comments
-  let text = raw.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/\/\/.*/g, '');
-
-  // Locate  keymap { ... }
-  const km = /keymap\s*\{/.exec(text);
-  if (!km) throw new Error('No "keymap {" block found.\nIs this a ZMK .keymap file?');
-  const brace = text.indexOf('{', km.index);
-  const kmBlock = extractBlock(text, brace);
-  if (!kmBlock) throw new Error('Malformed keymap block (unbalanced braces).');
-
-  const inner = kmBlock.content;
-  const layers = [];
-
-  // Match each sub-block:  layer-name { ... }
-  // Layer names can contain letters, digits, underscores, hyphens
-  const re = /([a-zA-Z_][a-zA-Z0-9_-]*)\s*\{/g;
-  let m;
-  while ((m = re.exec(inner)) !== null) {
-    const name = m[1];
-    // Skip the  compatible = "zmk,keymap";  entry (it has no braces, but guard anyway)
-    if (name === 'compatible') continue;
-
-    // Find the opening '{' and extract balanced block
-    const bp = m.index + m[0].lastIndexOf('{');
-    const lb = extractBlock(inner, bp);
-    if (!lb) continue;
-    re.lastIndex = lb.end + 1;   // skip past this block's closing }
-
-    // Pull bindings = < ... >;
-    const bm = lb.content.match(/bindings\s*=\s*<([\s\S]*?)>\s*;/);
-    if (!bm) continue;
-
-    const bindings = tokenizeBindings(bm[1]);
-    if (bindings.length === 0) continue;
-
-    layers.push({ name, bindings });
+// Rebuild original text but inject our modified layers
+function generateExportText() {
+  if (!RAW_FILE_TEXT) throw new Error("No raw text preserved!");
+  const km = /keymap\s*\{/.exec(RAW_FILE_TEXT);
+  if (!km) return RAW_FILE_TEXT;
+  
+  let brace = RAW_FILE_TEXT.indexOf('{', km.index);
+  let d=0, blockEnd=brace;
+  for(let i=brace; i<RAW_FILE_TEXT.length; i++){
+    if(RAW_FILE_TEXT[i]==='{') d++; else if(RAW_FILE_TEXT[i]==='}') {d--; if(d===0){blockEnd=i; break;}}
   }
-
-  if (layers.length === 0)
-    throw new Error('No layers with bindings found.\nCheck that the file contains a valid ZMK keymap block.');
-  return layers;
+  const kmContent = RAW_FILE_TEXT.slice(brace, blockEnd);
+  
+  let i = 0;
+  // Replace every bindings = < ... >; within the keymap block with our formatted updated bindings
+  const newKmContent = kmContent.replace(/(bindings\s*=\s*<\s*)([\s\S]*?)(\s*>;)/g, (full, p, c, s) => {
+    if (i < LAYERS.length) {
+      const out = formatLayerBindings(LAYERS[i].bindings);
+      i++; return p + out + s;
+    }
+    return full;
+  });
+  
+  return RAW_FILE_TEXT.slice(0, brace) + newKmContent + RAW_FILE_TEXT.slice(blockEnd);
 }
 
-// ── Color palette ──────────────────────────────────────────────────────────
-const PALETTE = [
-  '#7c3aed','#0891b2','#059669','#d97706',
-  '#9333ea','#e11d48','#8b5cf6','#f59e0b',
-  '#3b82f6','#10b981','#f97316','#ec4899',
-];
-
-// Capitalise each word, turn - and _ into spaces
-const fmt = n => n.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-
-// ── App state ──────────────────────────────────────────────────────────────
-let LAYERS = [], curIdx = 0;
-
-// ── SVG renderer ──────────────────────────────────────────────────────────
-function svgEl(tag, attrs, txt) {
-  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
-  for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
-  if (txt !== undefined) e.textContent = txt;
-  return e;
-}
-
-function renderKey(parent, pos, info, raw) {
-  const { x, y, rot, rpx, rpy } = pos;
-  const g = svgEl('g', { class: 'key-group', 'data-b': raw || '' });
-  if (rot !== 0) g.setAttribute('transform', `rotate(${rot},${rpx},${rpy})`);
-
-  g.appendChild(svgEl('rect', { x, y, width: KW, height: KW, rx: 5, ry: 5, class: `key-bg t-${info.type}` }));
-
-  if (info.type === 'empty') { parent.appendChild(g); return; }
-  if (info.type === 'trans') {
-    g.appendChild(svgEl('text', { x: x+KW/2, y: y+KW/2+1, class:'key-main c-trans', 'font-size':'13', 'dominant-baseline':'middle', 'text-anchor':'middle' }, '▽'));
-    parent.appendChild(g); return;
+// Emulate generic zmk glove80 neat row alignments: 10, 12, 12, 12, 18, 16 
+function formatLayerBindings(bindings) {
+  const rows = [10, 12, 12, 12, 18, 16];
+  let res = '\n'; let idx = 0;
+  for(let r of rows) {
+    const chunk = bindings.slice(idx, idx+r);
+    res += '            ' + chunk.join('  ') + '\n';
+    idx += r;
   }
-
-  const hasSub = !!info.sub;
-  const cx = x + KW / 2;
-  const mainY = hasSub ? y + KW / 2 - 5 : y + KW / 2 + 1;
-  const ml = info.main ? info.main.length : 0;
-  const ms = ml > 5 ? '8' : ml > 3 ? '10' : '13';
-
-  if (info.main) g.appendChild(svgEl('text', { x: cx, y: mainY, class:`key-main c-${info.type}`, 'font-size':ms, 'dominant-baseline':'middle', 'text-anchor':'middle' }, info.main));
-  if (hasSub)   g.appendChild(svgEl('text', { x: cx, y: y+KW-8, class:`key-sub c-${info.type}`,  'font-size':'8',  'dominant-baseline':'middle', 'text-anchor':'middle' }, info.sub));
-  parent.appendChild(g);
+  if(idx < bindings.length) res += '            ' + bindings.slice(idx).join('  ') + '\n';
+  return res + '        ';
 }
+
+// ── Rendering ──
+const PALETTE = ['#7c3aed','#0891b2','#059669','#d97706','#9333ea','#e11d48'];
 
 function renderLayer(idx) {
   curIdx = idx;
-  const svg = document.getElementById('kb');
-  svg.innerHTML = '';
+  const svg = document.getElementById('kb'); svg.innerHTML = '';
   svg.setAttribute('viewBox', `0 0 ${SVG_W} ${SVG_H}`);
-  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-  svg.removeAttribute('width'); svg.removeAttribute('height');
-
   svg.appendChild(svgEl('rect', { x:0, y:0, width:SVG_W, height:SVG_H, fill:'#0b0d13', rx:10 }));
-
+  
   const ly = 10;
-  svg.appendChild(svgEl('text', { x:cu(250),  y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Left Hand'));
-  svg.appendChild(svgEl('text', { x:cu(850),  y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Thumb Cluster'));
+  svg.appendChild(svgEl('text', { x:cu(250), y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Left Hand'));
+  svg.appendChild(svgEl('text', { x:cu(850), y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Thumb Cluster'));
   svg.appendChild(svgEl('text', { x:cu(1450), y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Right Hand'));
-  svg.appendChild(svgEl('line', { x1:cu(575),  y1:ly+8, x2:cu(575),  y2:SVG_H-10, class:'div-line' }));
-  svg.appendChild(svgEl('line', { x1:cu(1125), y1:ly+8, x2:cu(1125), y2:SVG_H-10, class:'div-line' }));
 
   LAYERS[idx].bindings.forEach((b, i) => {
     if (!POSITIONS[i]) return;
-    renderKey(svg, POSITIONS[i], parseBinding(b), b);
-  });
-
-  // Attach tooltip events to keys that have meaningful bindings
-  svg.querySelectorAll('.key-group').forEach(g => {
-    const raw = g.getAttribute('data-b');
-    if (!raw || raw === '&none' || raw === '&trans') return;
-    g.addEventListener('mouseenter', e => showTip(e, raw));
-    g.addEventListener('mousemove',  moveTip);
+    const { x, y, rot, rpx, rpy } = POSITIONS[i];
+    const info = parseBinding(b);
+    
+    let isSel = (selKey && selKey.layerIdx === idx && selKey.keyIdx === i) ? ' selected' : '';
+    const g = svgEl('g', { class: 'key-group' + isSel, 'data-i': i });
+    if (rot) g.setAttribute('transform', `rotate(${rot},${rpx},${rpy})`);
+    
+    g.appendChild(svgEl('rect', { x, y, width: KW, height: KW, rx: 5, ry: 5, class: `key-bg t-${info.type}` }));
+    
+    if (info.type === 'trans') {
+      g.appendChild(svgEl('text', { x: x+KW/2, y: y+KW/2+1, class:'key-main c-trans', 'font-size':'13', 'dominant-baseline':'middle', 'text-anchor':'middle' }, '▽'));
+    } else if (info.type !== 'empty') {
+      const cx = x + KW/2, my = info.sub ? y + KW/2 - 5 : y + KW/2 + 1;
+      const fs = info.main.length > 4 ? '9' : '13';
+      if(info.main) g.appendChild(svgEl('text', { x:cx, y:my, class:`key-main c-${info.type}`, 'font-size':fs, 'dominant-baseline':'middle', 'text-anchor':'middle' }, info.main));
+      if(info.sub) g.appendChild(svgEl('text', { x:cx, y:y+KW-8, class:`key-sub c-${info.type}`, 'font-size':'8', 'dominant-baseline':'middle', 'text-anchor':'middle' }, info.sub));
+    }
+    
+    // Interactions
+    g.addEventListener('click', (e) => { e.stopPropagation(); onKeyClick(idx, i); });
+    g.addEventListener('mouseenter', e => { if (b && b!=='&none' && b!=='&trans') showTip(e, b); });
+    g.addEventListener('mousemove', moveTip);
     g.addEventListener('mouseleave', hideTip);
+    svg.appendChild(g);
   });
 }
 
-// ── Tooltip ────────────────────────────────────────────────────────────────
-const tipEl = document.getElementById('tip');
-function showTip(e, txt) { tipEl.textContent = txt; tipEl.style.display = 'block'; moveTip(e); }
-function moveTip(e) {
-  const w = tipEl.offsetWidth, h = tipEl.offsetHeight;
-  let l = e.clientX + 12, t = e.clientY - h - 8;
-  if (l + w > window.innerWidth - 10) l = e.clientX - w - 12;
-  if (t < 5) t = e.clientY + 12;
-  tipEl.style.left = l + 'px'; tipEl.style.top = t + 'px';
-}
-function hideTip() { tipEl.style.display = 'none'; }
-
-// ── Tabs ───────────────────────────────────────────────────────────────────
 function buildTabs() {
-  const c = document.getElementById('tabs');
-  c.innerHTML = '';
-  LAYERS.forEach((layer, i) => {
+  const c = document.getElementById('tabs'); c.innerHTML = '';
+  LAYERS.forEach((l, i) => {
     const b = document.createElement('button');
     b.className = 'tab' + (i === curIdx ? ' active' : '');
-    b.id = `tab-${i}`;
-    b.textContent = `${i}  ${fmt(layer.name)}`;
-    const color = layer.color;
-    b.addEventListener('click', () => selectLayer(i));
-    if (i === curIdx) { b.style.background = color; b.style.borderColor = color; }
+    b.textContent = `${i} ${l.name}`;
+    b.addEventListener('click', () => { curIdx = i; buildTabs(); renderLayer(i); });
+    if(i===curIdx) { b.style.background = l.color; b.style.borderColor = l.color; }
     c.appendChild(b);
   });
 }
 
-function selectLayer(i) {
-  curIdx = i;
-  document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); t.style.background = ''; t.style.borderColor = ''; });
-  const b = document.getElementById(`tab-${i}`);
-  if (b) { b.classList.add('active'); b.style.background = LAYERS[i].color; b.style.borderColor = LAYERS[i].color; }
-  renderLayer(i);
-}
-
-// ── Load layers ────────────────────────────────────────────────────────────
-function loadLayers(layers, label, isDemo) {
-  LAYERS = layers.map((l, i) => ({ ...l, color: PALETTE[i % PALETTE.length] }));
-  curIdx = 0;
-
-  const dot = document.getElementById('dot');
-  const txt = document.getElementById('status-txt');
-  const sub = document.getElementById('subtitle');
-
-  if (isDemo) {
-    dot.className = 'dot demo';
-    txt.textContent = 'Demo data (auto-load not available via file://) — drag & drop or click "Load Keymap"';
-  } else {
-    dot.className = 'dot ok';
-    txt.textContent = `${label}  ·  ${LAYERS.length} layer${LAYERS.length !== 1 ? 's' : ''}`;
-    sub.textContent = `${label} · ${LAYERS.length} layers · MoErgo Glove80`;
+// ── Interactive Editor Logic ──
+function getZmkFromEvent(e) {
+  // Map JS e.code / e.key to basic ZMK codes
+  const keys = {
+    Escape:'ESCAPE', Space:'SPACE', Enter:'ENTER', Tab:'TAB', Backspace:'BACKSPACE', Delete:'DELETE',
+    ArrowUp:'UP', ArrowDown:'DOWN', ArrowLeft:'LEFT', ArrowRight:'RIGHT',
+    PageUp:'PAGE_UP', PageDown:'PAGE_DOWN', Home:'HOME', End:'END',
+    BracketLeft:'LEFT_BRACKET', BracketRight:'RIGHT_BRACKET', Backslash:'BACKSLASH',
+    Semicolon:'SEMI', Quote:'SQT', Comma:'COMMA', Period:'DOT', Slash:'SLASH',
+    Minus:'MINUS', Equal:'EQUAL', Backquote:'GRAVE',
+    ControlLeft:'LCTRL', ControlRight:'RCTRL', AltLeft:'LALT', AltRight:'RALT',
+    ShiftLeft:'LSHIFT', ShiftRight:'RSHIFT', MetaLeft:'LGUI', MetaRight:'RGUI'
+  };
+  if (keys[e.code]) return keys[e.code];
+  if (e.code.startsWith('Key')) return e.code.slice(3).toUpperCase();
+  if (e.code.startsWith('Digit')) return 'N' + e.code.slice(5);
+  if (e.code.startsWith('Numpad')) return 'KP_N' + e.code.slice(6);
+  if (e.code.startsWith('F') && e.code.length <= 3) return e.code;
+  
+  if (e.key.length === 1) { // Fallback for symbols
+    let c = e.key.toUpperCase();
+    if(c>='A' && c<='Z') return c;
+    if(c>='0' && c<='9') return 'N'+c;
   }
+  return null;
+}
 
-  document.getElementById('err-box').style.display = 'none';
+document.addEventListener('keydown', e => {
+  // Edit mode active, ignoring mod taps themselves unless they are singular assignments
+  if (selKey && !swapActive && !['Shift','Control','Alt','Meta'].includes(e.key)) {
+    if (e.key === 'Escape') { deselectKey(); return; }
+    const code = getZmkFromEvent(e);
+    if (code) {
+      e.preventDefault();
+      assignKey(code);
+    }
+    return;
+  }
+  if (!selKey && !['INPUT','TEXTAREA'].includes(e.target.tagName) && LAYERS.length > 0) {
+    if (/^[0-9]$/.test(e.key) && +e.key < LAYERS.length) { curIdx = +e.key; buildTabs(); renderLayer(curIdx); }
+    if (e.key === 'ArrowRight') { curIdx = (curIdx+1)%LAYERS.length; buildTabs(); renderLayer(curIdx); }
+    if (e.key === 'ArrowLeft')  { curIdx = (curIdx-1+LAYERS.length)%LAYERS.length; buildTabs(); renderLayer(curIdx); }
+  }
+});
+
+function onKeyClick(lIdx, kIdx) {
+  if (swapActive && selKey) {
+    // Perform Swap!
+    doSwap(selKey, { layerIdx: lIdx, keyIdx: kIdx });
+    swapActive = false;
+    document.getElementById('swap-banner').classList.remove('show');
+    selKey = null; renderLayer(curIdx);
+    document.getElementById('edit-panel').classList.remove('show');
+    return;
+  }
+  selKey = { layerIdx: lIdx, keyIdx: kIdx };
+  renderLayer(curIdx);
+  const ep = document.getElementById('edit-panel');
+  document.getElementById('ep-binding').textContent = LAYERS[lIdx].bindings[kIdx];
+  ep.classList.add('show');
+}
+
+function deselectKey() {
+  selKey = null; swapActive = false;
+  document.getElementById('swap-banner').classList.remove('show');
+  document.getElementById('edit-panel').classList.remove('show');
+  renderLayer(curIdx);
+}
+
+function startSwap() {
+  if (!selKey) return;
+  swapActive = true;
+  document.getElementById('edit-panel').classList.remove('show');
+  document.getElementById('swap-banner').classList.add('show');
+}
+function cancelSwap() { swapActive = false; document.getElementById('swap-banner').classList.remove('show'); deselectKey(); }
+
+function doSwap(k1, k2) {
+  const b1 = LAYERS[k1.layerIdx].bindings[k1.keyIdx];
+  const b2 = LAYERS[k2.layerIdx].bindings[k2.keyIdx];
+  
+  const p1 = getPrimaryTapCode(b1) || 'A'; 
+  const p2 = getPrimaryTapCode(b2) || 'A';
+  
+  LAYERS[k1.layerIdx].bindings[k1.keyIdx] = setPrimaryTap(b1, p2);
+  LAYERS[k2.layerIdx].bindings[k2.keyIdx] = setPrimaryTap(b2, p1);
+  triggerUnsaved();
+}
+
+function assignKey(zmkCode) {
+  if (!selKey) return;
+  const b = LAYERS[selKey.layerIdx].bindings[selKey.keyIdx];
+  LAYERS[selKey.layerIdx].bindings[selKey.keyIdx] = setPrimaryTap(b, zmkCode);
+  document.getElementById('ep-binding').textContent = LAYERS[selKey.layerIdx].bindings[selKey.keyIdx];
+  triggerUnsaved();
+  renderLayer(curIdx);
+}
+
+function triggerUnsaved() {
+  document.getElementById('save-btn').disabled = false;
+  document.getElementById('status-txt').textContent = "Keymap contains unsaved changes.";
+  document.getElementById('dot').className = "dot demo";
+}
+
+// ── Modals & Data ──
+const SELECT_CATS = {
+  "Letters": "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split(' '),
+  "Numbers": "N1 N2 N3 N4 N5 N6 N7 N8 N9 N0".split(' '),
+  "Punctuation": ["MINUS","EQUAL","LEFT_BRACKET","RIGHT_BRACKET","BACKSLASH","SEMICOLON","SQT","GRAVE","COMMA","DOT","SLASH"],
+  "Navigation": ["UP","DOWN","LEFT","RIGHT","PAGE_UP","PAGE_DOWN","HOME","END"],
+  "Action": ["SPACE","ENTER","BACKSPACE","DELETE","TAB","ESCAPE"],
+  "Modifiers": ["LCTRL","RCTRL","LALT","RALT","LGUI","RGUI","LSHIFT","RSHIFT"],
+  "Media": ["C_PREV","C_NEXT","C_PLAY_PAUSE","C_MUTE","C_VOL_DN","C_VOL_UP"]
+};
+
+function openSelectModal() {
+  const bg = document.getElementById('select-modal-bg');
+  const bdy = document.getElementById('modal-cats');
+  bdy.innerHTML = '';
+  
+  for (const [catName, keys] of Object.entries(SELECT_CATS)) {
+    const cg = document.createElement('div'); cg.className = 'cat-group';
+    cg.innerHTML = `<h3>${catName}</h3>`;
+    const ck = document.createElement('div'); ck.className = 'cat-keys';
+    keys.forEach(k => {
+      const btn = document.createElement('button');
+      btn.className = 'kb-btn';
+      // User friendly labels
+      let d = k.replace('N','').replace('LEFT_BRACKET','[').replace('RIGHT_BRACKET',']').replace('MINUS','-')
+              .replace('EQUAL','=').replace('COMMA',',').replace('DOT','.').replace('SLASH','/').replace('SQT',"'").replace('GRAVE','`');
+      btn.textContent = (SYM[k] && SYM[k]!==k) ? `${SYM[k]} ${k}` : d;
+      btn.onclick = () => { assignKey(k); closeSelectModal(); };
+      ck.appendChild(btn);
+    });
+    cg.appendChild(ck); bdy.appendChild(cg);
+  }
+  bg.classList.add('show');
+}
+function closeSelectModal() { document.getElementById('select-modal-bg').classList.remove('show'); }
+
+// ── Files & Load/Save ──
+function loadLayersState(layers, rawText, label, isDemo) {
+  RAW_FILE_TEXT = rawText;
+  LAYERS = layers.map((l,i) => ({ ...l, color: PALETTE[i%PALETTE.length] }));
+  curIdx = 0; selKey = null; swapActive = false;
+  
+  const ds = document.getElementById('dot'); const st = document.getElementById('status-txt');
+  document.getElementById('save-btn').disabled = isDemo; // Can't save demo easily back to file
+
+  if (isDemo) { ds.className='dot demo'; st.textContent='Demo mode — load your keymap to save.'; }
+  else { ds.className='dot ok'; st.textContent=`Loaded ${label} · ${LAYERS.length} layers`; }
+  
+  document.getElementById('err-box').style.display='none';
   document.getElementById('kb-area').classList.add('show');
-  buildTabs();
-  renderLayer(0);
+  buildTabs(); renderLayer(0);
 }
 
-function showError(msg) {
-  const dot = document.getElementById('dot');
-  const txt = document.getElementById('status-txt');
-  const box = document.getElementById('err-box');
-  dot.className = 'dot err';
-  txt.textContent = 'Parse error — see details below';
-  box.textContent = msg;
-  box.style.display = 'block';
-}
+document.getElementById('save-btn').addEventListener('click', async () => {
+  try {
+    const newConfigText = generateExportText();
+    
+    // Attempt File System Access API
+    if (window.showSaveFilePicker) {
+      if (!fileHandle) {
+         fileHandle = await window.showSaveFilePicker({ suggestedName: 'glove80.keymap', types: [{description:'Keymap', accept:{'text/plain':['.keymap']}}] });
+      }
+      const writable = await fileHandle.createWritable();
+      await writable.write(newConfigText);
+      await writable.close();
+      document.getElementById('dot').className = "dot ok";
+      document.getElementById('status-txt').textContent = "File saved successfully!";
+      document.getElementById('save-btn').disabled = true;
+    } else {
+      // Fallback: standard download
+      const blob = new Blob([newConfigText], {type: 'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'glove80.keymap';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      document.getElementById('dot').className = "dot ok";
+      document.getElementById('status-txt').textContent = "File downloaded.";
+      document.getElementById('save-btn').disabled = true;
+    }
+  } catch(e) {
+    if (e.name !== 'AbortError') { alert("Save failed: "+e.message); }
+  }
+});
 
-// ── File input ─────────────────────────────────────────────────────────────
-function handleFile(file) {
-  if (!file) return;
-  const dot = document.getElementById('dot');
-  const txt = document.getElementById('status-txt');
-  dot.className = 'dot spin';
-  txt.textContent = `Parsing ${file.name}…`;
+function handleFile(file, fHandle) {
+  if (!file) return; fileHandle = fHandle;
   const r = new FileReader();
   r.onload = e => {
-    try {
-      loadLayers(parseZMKKeymap(e.target.result), file.name, false);
-    } catch (err) {
-      showError(err.message);
-      console.error(err);
+    try { loadLayersState(parseZMKKeymap(e.target.result), e.target.result, file.name, false); }
+    catch(err) {
+      document.getElementById('err-box').textContent=err.message;
+      document.getElementById('err-box').style.display='block';
     }
   };
   r.readAsText(file);
 }
 
-const fileInput = document.getElementById('file-input');
-document.getElementById('load-btn').addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
-
-// Drag & drop anywhere on the page
-let dc = 0;
-document.addEventListener('dragenter', e => { e.preventDefault(); dc++; document.getElementById('drop-overlay').classList.add('show'); });
-document.addEventListener('dragleave', () => { dc--; if (dc <= 0) { dc = 0; document.getElementById('drop-overlay').classList.remove('show'); } });
-document.addEventListener('dragover',  e => e.preventDefault());
-document.addEventListener('drop', e => {
-  e.preventDefault(); dc = 0;
-  document.getElementById('drop-overlay').classList.remove('show');
-  handleFile(e.dataTransfer.files[0]);
-});
-
-// ── Keyboard shortcuts ─────────────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT' || !LAYERS.length) return;
-  if (/^[0-9]$/.test(e.key)) { const i = +e.key; if (i < LAYERS.length) selectLayer(i); }
-  else if (e.key === 'ArrowRight') selectLayer((curIdx + 1) % LAYERS.length);
-  else if (e.key === 'ArrowLeft')  selectLayer((curIdx - 1 + LAYERS.length) % LAYERS.length);
-});
-
-// ── Demo fallback data (two layers — encourages loading the real keymap) ──
-const DEMO = [
-  { name: 'colemak-dh', bindings: [
-    '&kp F1','&kp F2','&kp F3','&kp F4','&kp F5',
-    '&kp F6','&kp F7','&kp F8','&kp F9','&kp F10',
-    '&trans','&kp N1','&kp ASTERISK','&kp EQUAL','&kp PLUS','&kp N5',
-    '&kp N6','&kp SQT','&kp DOUBLE_QUOTES','&kp GRAVE','&kp N0','&kp C_VOL_UP',
-    '&caps_word','&kp Q','&kp W','&kp F','&kp P','&kp B',
-    '&kp J','&kp L','&kp U','&kp Y','&kp SEMI','&kp C_VOL_DN',
-    '&kp TAB','&mt LCTRL A','&mt LEFT_ALT R','&mt LGUI S','&mt LEFT_SHIFT T','&kp G',
-    '&kp M','&mt RIGHT_SHIFT N','&mt RGUI E','&mt RALT I','&mt RCTRL O','&kp K_MUTE',
-    '&tog 3','&kp Z','&kp X','&kp C','&kp D','&kp V',
-    '&lt 1 BACKSPACE','&lt 5 PG_UP','&kp PAGE_DOWN',
-    '&kp LG(Z)','&kp LS(LG(Z))','&lt 1 TAB',
-    '&kp K','&kp H','&lt 3 COMMA','&kp DOT','&mt BACKSLASH SLASH','&kp C_PLAY_PAUSE',
-    '&magic 7 0','&kp EXCLAMATION','&kp LEFT_PARENTHESIS','&kp RIGHT_PARENTHESIS','&kp UNDERSCORE',
-    '&lt 2 SPACE','&lt 4 ENTER','&kp LG(LS(LA(LC(SPACE))))','&kp LG(SPACE)','&kp ESCAPE','&lt 3 LC(LA(LS(LG(H))))',
-    '&kp MINUS','&kp LEFT_BRACKET','&kp RIGHT_BRACKET','&kp QUESTION','&magic 7 0',
-  ]},
-  { name: 'sympad', bindings: [
-    '&none','&none','&none','&none','&none','&none','&none','&none','&none','&none',
-    '&none','&none','&kp ASTERISK','&kp EQUAL','&kp PLUS','&kp LESS_THAN',
-    '&kp GREATER_THAN','&kp N7','&kp N8','&kp N9','&none','&none',
-    '&none','&none','&kp TILDE','&kp SQT','&kp DQT','&kp GRAVE',
-    '&kp PLUS','&kp N4','&kp N5','&kp N6','&none','&none',
-    '&none','&kp AMPS','&kp HASH','&kp EXCLAMATION','&kp COLON','&kp AT_SIGN',
-    '&kp EQUAL','&kp N1','&kp N2','&kp N3','&kp PERCENT','&none',
-    '&none','&kp CARET','&kp LEFT_BRACE','&kp RIGHT_BRACE','&kp DOLLAR','&kp PIPE',
-    '&kp BACKSPACE','&kp UP_ARROW','&kp DOWN',
-    '&kp LG(Z)','&kp LS(LG(Z))','&kp DELETE',
-    '&kp ASTERISK','&kp N0','&kp COMMA','&kp PERIOD','&mt NON_US_BACKSLASH SLASH','&none',
-    '&none','&kp EXCLAMATION','&kp LEFT_PARENTHESIS','&kp RIGHT_PARENTHESIS','&kp UNDERSCORE',
-    '&kp SPACE','&kp ENTER','&kp LG(TAB)','&kp LG(SPACE)','&kp ESCAPE','&kp TAB',
-    '&kp MINUS','&kp LEFT_BRACKET','&kp RIGHT_BRACKET','&kp QUESTION','&none',
-  ]},
-];
-
-// ── Init: try to auto-load the keymap via fetch, then fall back to demo ────
-async function init() {
-  try {
-    // Relative to the HTML file — works when opened via a local HTTP server
-    const resp = await fetch('./config/glove80.keymap', { cache: 'no-cache' });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const text = await resp.text();
-    loadLayers(parseZMKKeymap(text), 'glove80.keymap', false);
-  } catch (_) {
-    loadLayers(DEMO, 'demo', true);
+document.getElementById('load-btn').addEventListener('click', async () => {
+  if (window.showOpenFilePicker) {
+    try {
+      const [fh] = await window.showOpenFilePicker({ types:[{description:'Keymap', accept:{'text/plain':['.keymap']}}] });
+      handleFile(await fh.getFile(), fh);
+    } catch(e) {} // Cancelled Open 
+  } else {
+    document.getElementById('file-input').click();
   }
-}
+});
+document.getElementById('file-input').addEventListener('change', e => handleFile(e.target.files[0], null));
 
-init();
+// Tooltip logic
+const tipEl = document.getElementById('tip');
+function showTip(e, txt) { tipEl.textContent=txt; tipEl.style.display='block'; moveTip(e); }
+function moveTip(e) { tipEl.style.left = (e.clientX+12)+'px'; tipEl.style.top = (e.clientY+12)+'px'; }
+function hideTip() { tipEl.style.display='none'; }
+
+// Drag Drop Logic
+let dc=0; const drop = document.getElementById('drop-overlay');
+document.addEventListener('dragenter', e=>{e.preventDefault(); dc++; drop.classList.add('show');});
+document.addEventListener('dragleave', ()=>{dc--; if(dc<=0) drop.classList.remove('show');});
+document.addEventListener('dragover', e=>e.preventDefault());
+document.addEventListener('drop', async e=>{
+  e.preventDefault(); dc=0; drop.classList.remove('show');
+  
+  if (e.dataTransfer.items && e.dataTransfer.items.length) {
+    const item = e.dataTransfer.items[0];
+    if (item.getAsFileSystemHandle) {
+      const handle = await item.getAsFileSystemHandle();
+      handleFile(await handle.getFile(), handle);
+      return;
+    }
+  }
+  handleFile(e.dataTransfer.files[0], null);
+});
+
+// Auto load
+(async function init() {
+  try {
+    const resp = await fetch('./config/glove80.keymap', {cache:'no-cache'});
+    if(!resp.ok) throw new Error();
+    loadLayersState(parseZMKKeymap(await resp.text()), await resp.text(), 'glove80.keymap', false);
+  } catch(_) {
+    // Need dummy file text to support exporting demo logic fallback if needed
+    loadLayersState([], "", "demo", true); // Using empty string to prevent failure
+  }
+})();
 </script>
 </body>
 </html>
