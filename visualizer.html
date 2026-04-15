@@ -160,6 +160,16 @@
     @keyframes slideUp { from { opacity:0; transform:translate(-50%,20px) } to { opacity:1; transform:translate(-50%,0) } }
     @keyframes slideDown { from { opacity:0; transform:translate(-50%,-20px) } to { opacity:1; transform:translate(-50%,0) } }
     @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+    
+    .animate-assign {
+      animation: bounceGlow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-box: fill-box; transform-origin: center;
+    }
+    @keyframes bounceGlow {
+      0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(16,185,129,0)); }
+      50% { transform: scale(1.2); filter: drop-shadow(0 0 20px rgba(16,185,129,0.9)); }
+      100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(16,185,129,0)); }
+    }
 
     /* ── Select Modal ── */
     #select-modal-bg {
@@ -478,7 +488,7 @@ function svgEl(tag, attrs, txt) {
   return e;
 }
 
-function renderLayer(idx) {
+function renderLayer(idx, animAssignIdx = -1) {
   curIdx = idx;
   const svg = document.getElementById('kb'); svg.innerHTML = '';
   svg.setAttribute('viewBox', `0 0 ${SVG_W} ${SVG_H}`);
@@ -498,15 +508,18 @@ function renderLayer(idx) {
     const g = svgEl('g', { class: 'key-group' + isSel, 'data-i': i });
     if (rot) g.setAttribute('transform', `rotate(${rot},${rpx},${rpy})`);
     
-    g.appendChild(svgEl('rect', { x, y, width: KW, height: KW, rx: 5, ry: 5, class: `key-bg t-${info.type}` }));
+    const innerG = svgEl('g', { class: animAssignIdx === i ? 'animate-assign' : '' });
+    g.appendChild(innerG);
+    
+    innerG.appendChild(svgEl('rect', { x, y, width: KW, height: KW, rx: 5, ry: 5, class: `key-bg t-${info.type}` }));
     
     if (info.type === 'trans') {
-      g.appendChild(svgEl('text', { x: x+KW/2, y: y+KW/2+1, class:'key-main c-trans', 'font-size':'13', 'dominant-baseline':'middle', 'text-anchor':'middle' }, '▽'));
+      innerG.appendChild(svgEl('text', { x: x+KW/2, y: y+KW/2+1, class:'key-main c-trans', 'font-size':'13', 'dominant-baseline':'middle', 'text-anchor':'middle' }, '▽'));
     } else if (info.type !== 'empty') {
       const cx = x + KW/2, my = info.sub ? y + KW/2 - 5 : y + KW/2 + 1;
       const fs = info.main.length > 4 ? '9' : '13';
-      if(info.main) g.appendChild(svgEl('text', { x:cx, y:my, class:`key-main c-${info.type}`, 'font-size':fs, 'dominant-baseline':'middle', 'text-anchor':'middle' }, info.main));
-      if(info.sub) g.appendChild(svgEl('text', { x:cx, y:y+KW-8, class:`key-sub c-${info.type}`, 'font-size':'8', 'dominant-baseline':'middle', 'text-anchor':'middle' }, info.sub));
+      if(info.main) innerG.appendChild(svgEl('text', { x:cx, y:my, class:`key-main c-${info.type}`, 'font-size':fs, 'dominant-baseline':'middle', 'text-anchor':'middle' }, info.main));
+      if(info.sub) innerG.appendChild(svgEl('text', { x:cx, y:y+KW-8, class:`key-sub c-${info.type}`, 'font-size':'8', 'dominant-baseline':'middle', 'text-anchor':'middle' }, info.sub));
     }
     
     // Interactions
@@ -576,15 +589,20 @@ document.addEventListener('keydown', e => {
 });
 
 function onKeyClick(lIdx, kIdx) {
-  if (swapActive && selKey) {
-    // Perform Swap!
-    doSwap(selKey, { layerIdx: lIdx, keyIdx: kIdx });
+  if (swapActive && selKey && (selKey.layerIdx !== lIdx || selKey.keyIdx !== kIdx)) {
+    const sKey = selKey;
     swapActive = false;
     document.getElementById('swap-banner').classList.remove('show');
-    selKey = null; renderLayer(curIdx);
+    selKey = null;
     document.getElementById('edit-panel').classList.remove('show');
+    
+    animateSwap(sKey, { layerIdx: lIdx, keyIdx: kIdx }, () => {
+      doSwap(sKey, { layerIdx: lIdx, keyIdx: kIdx });
+      renderLayer(curIdx);
+    });
     return;
   }
+  if (swapActive) return; // Prevent clicking same key from doing anything weird while swap active
   selKey = { layerIdx: lIdx, keyIdx: kIdx };
   renderLayer(curIdx);
   const ep = document.getElementById('edit-panel');
@@ -619,13 +637,51 @@ function doSwap(k1, k2) {
   triggerUnsaved();
 }
 
+function animateSwap(k1, k2, onComplete) {
+  if (k1.layerIdx !== curIdx || k2.layerIdx !== curIdx) { onComplete(); return; }
+  
+  const g1 = document.querySelector(`.key-group[data-i="${k1.keyIdx}"]`);
+  const g2 = document.querySelector(`.key-group[data-i="${k2.keyIdx}"]`);
+  if (!g1 || !g2) { onComplete(); return; }
+  
+  const c1 = g1.cloneNode(true); const c2 = g2.cloneNode(true);
+  c1.classList.remove('selected'); c2.classList.remove('selected');
+  
+  const svg = document.getElementById('kb');
+  const w1 = svgEl('g'); w1.appendChild(c1); svg.appendChild(w1);
+  const w2 = svgEl('g'); w2.appendChild(c2); svg.appendChild(w2);
+  
+  g1.style.opacity = '0'; g2.style.opacity = '0';
+  
+  const r1 = g1.getBoundingClientRect(); const r2 = g2.getBoundingClientRect();
+  const p1 = svg.createSVGPoint(); p1.x = r1.left; p1.y = r1.top;
+  const p2 = svg.createSVGPoint(); p2.x = r2.left; p2.y = r2.top;
+  const CTM = svg.getScreenCTM();
+  let dx1=0, dy1=0, dx2=0, dy2=0;
+  if (CTM) {
+    const inv = CTM.inverse();
+    const sp1 = p1.matrixTransform(inv); const sp2 = p2.matrixTransform(inv);
+    dx1 = sp2.x - sp1.x; dy1 = sp2.y - sp1.y;
+    dx2 = sp1.x - sp2.x; dy2 = sp1.y - sp2.y;
+  }
+  
+  w1.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)';
+  w2.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)';
+  w1.getBoundingClientRect(); // reflow
+  
+  w1.style.transform = `translate(${dx1}px, ${dy1}px)`;
+  w2.style.transform = `translate(${dx2}px, ${dy2}px)`;
+  
+  setTimeout(() => { svg.removeChild(w1); svg.removeChild(w2); onComplete(); }, 450);
+}
+
 function assignKey(zmkCode) {
   if (!selKey) return;
   const b = LAYERS[selKey.layerIdx].bindings[selKey.keyIdx];
   LAYERS[selKey.layerIdx].bindings[selKey.keyIdx] = setPrimaryTap(b, zmkCode);
   document.getElementById('ep-binding').textContent = LAYERS[selKey.layerIdx].bindings[selKey.keyIdx];
   triggerUnsaved();
-  renderLayer(curIdx);
+  renderLayer(curIdx, selKey.keyIdx);
 }
 
 function triggerUnsaved() {
