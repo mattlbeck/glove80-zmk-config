@@ -608,7 +608,15 @@ function getZmkFromEvent(e) {
   if (e.code.startsWith('Numpad')) return 'KP_N' + e.code.slice(6);
   if (e.code.startsWith('F') && e.code.length <= 3) return e.code;
   
-  if (e.key.length === 1) { // Fallback for symbols
+  const shiftedSyms = {
+    '!':'EXCLAMATION', '@':'AT_SIGN', '#':'HASH', '$':'DOLLAR', '%':'PERCENT',
+    '^':'CARET', '&':'AMPS', '*':'ASTERISK', '(':'LEFT_PARENTHESIS', ')':'RIGHT_PARENTHESIS',
+    '_':'UNDERSCORE', '+':'PLUS', '{':'LEFT_BRACE', '}':'RIGHT_BRACE', '|':'PIPE',
+    ':':'COLON', '"':'DOUBLE_QUOTES', '~':'TILDE', '<':'LESS_THAN', '>':'GREATER_THAN', '?':'QUESTION'
+  };
+  if (shiftedSyms[e.key]) return shiftedSyms[e.key];
+
+  if (e.key.length === 1) { // Fallback for letters/numbers
     let c = e.key.toUpperCase();
     if(c>='A' && c<='Z') return c;
     if(c>='0' && c<='9') return 'N'+c;
@@ -757,6 +765,7 @@ const SELECT_CATS = {
   "Letters": "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split(' '),
   "Numbers": "N1 N2 N3 N4 N5 N6 N7 N8 N9 N0".split(' '),
   "Punctuation": ["MINUS","EQUAL","LEFT_BRACKET","RIGHT_BRACKET","BACKSLASH","SEMICOLON","SQT","GRAVE","COMMA","DOT","SLASH"],
+  "Shifted Punct": ["EXCLAMATION","AT_SIGN","HASH","DOLLAR","PERCENT","CARET","AMPS","ASTERISK","LEFT_PARENTHESIS","RIGHT_PARENTHESIS","UNDERSCORE","PLUS","LEFT_BRACE","RIGHT_BRACE","PIPE","COLON","DOUBLE_QUOTES","TILDE","LESS_THAN","GREATER_THAN","QUESTION"],
   "Navigation": ["UP","DOWN","LEFT","RIGHT","PAGE_UP","PAGE_DOWN","HOME","END"],
   "Action": ["SPACE","ENTER","BACKSPACE","DELETE","TAB","ESCAPE"],
   "Modifiers": ["LCTRL","RCTRL","LALT","RALT","LGUI","RGUI","LSHIFT","RSHIFT"],
