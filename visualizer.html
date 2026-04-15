@@ -123,12 +123,16 @@
     .key-main { font-family:'JetBrains Mono',monospace; font-weight:600; text-anchor:middle; dominant-baseline:middle; }
     .key-sub  { font-family:'JetBrains Mono',monospace; font-weight:400; text-anchor:middle; dominant-baseline:middle; opacity:.6; }
     
-    .key-group { cursor: pointer; transition: filter 0.15s; }
+    .key-group { cursor: pointer; transition: filter 0.15s, opacity 0.15s; }
     .key-group:hover rect   { filter: brightness(1.5); }
     .key-group:hover        { filter: drop-shadow(0 3px 10px rgba(124,58,237,.45)); }
     
     .key-group.selected rect { stroke: #a78bfa; stroke-width: 2.5; filter: brightness(1.3); }
     .key-group.selected { filter: drop-shadow(0 0 12px rgba(167,139,250,.6)); }
+
+    .key-group.inbound-hold { opacity: 0.35; }
+    .key-group.inbound-hold rect { stroke: #eab308; stroke-dasharray: 4 3; }
+    .key-group.inbound-tap rect { stroke: #3b82f6; stroke-width: 2; filter: brightness(1.2); }
 
     /* ── interact UI ── */
     #edit-panel {
@@ -487,6 +491,31 @@ function formatLayerBindings(bindings) {
 // ── Rendering ──
 const PALETTE = ['#7c3aed','#0891b2','#059669','#d97706','#9333ea','#e11d48'];
 
+function getInboundStatus(b, targetIdxStr) {
+  b = b.trim();
+  if (b === '&layer_td' && targetIdxStr === '3') return 'hold';
+  if (b.startsWith('&mo ') && b.split(/\s+/)[1] === targetIdxStr) return 'hold';
+  if (b.startsWith('&lt ') && b.split(/\s+/)[1] === targetIdxStr) return 'hold';
+  if (b.startsWith('&tog ') && b.split(/\s+/)[1] === targetIdxStr) return 'tap';
+  if (b.startsWith('&to ') && b.split(/\s+/)[1] === targetIdxStr) return 'tap';
+  return null;
+}
+
+function findInboundKeys(targetIdx) {
+  const targetStr = targetIdx.toString();
+  const inbounds = {};
+  LAYERS.forEach((layer, lIdx) => {
+    if (lIdx === targetIdx) return;
+    layer.bindings.forEach((b, kIdx) => {
+      const type = getInboundStatus(b, targetStr);
+      if (type) {
+        if (inbounds[kIdx] !== 'hold') inbounds[kIdx] = type;
+      }
+    });
+  });
+  return inbounds;
+}
+
 function svgEl(tag, attrs, txt) {
   const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
   for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
@@ -503,13 +532,19 @@ function renderLayer(idx, animAssignIdx = -1) {
   
 
 
+  const inbounds = findInboundKeys(idx);
+
   LAYERS[idx].bindings.forEach((b, i) => {
     if (!POSITIONS[i]) return;
     const { x, y, rot, rpx, rpy } = POSITIONS[i];
     const info = parseBinding(b);
     
-    let isSel = (selKey && selKey.layerIdx === idx && selKey.keyIdx === i) ? ' selected' : '';
-    const g = svgEl('g', { class: 'key-group' + isSel, 'data-i': i });
+    let cls = 'key-group';
+    if (selKey && selKey.layerIdx === idx && selKey.keyIdx === i) cls += ' selected';
+    if (inbounds[i] === 'hold') cls += ' inbound-hold';
+    else if (inbounds[i] === 'tap') cls += ' inbound-tap';
+    
+    const g = svgEl('g', { class: cls, 'data-i': i });
     if (rot) g.setAttribute('transform', `rotate(${rot},${rpx},${rpy})`);
     
     const innerG = svgEl('g', { class: animAssignIdx === i ? 'animate-assign' : '' });
@@ -528,7 +563,14 @@ function renderLayer(idx, animAssignIdx = -1) {
     
     // Interactions
     g.addEventListener('click', (e) => { e.stopPropagation(); onKeyClick(idx, i); });
-    g.addEventListener('mouseenter', e => { if (b && b!=='&none' && b!=='&trans') showTip(e, b); });
+    g.addEventListener('mouseenter', e => { 
+      if (b && b!=='&none' && b!=='&trans') {
+        let msg = b;
+        if (inbounds[i] === 'hold') msg += '\n[Unavailable: Held from another layer]';
+        else if (inbounds[i] === 'tap') msg += '\n[Entry point: Tapped from another layer]';
+        showTip(e, msg); 
+      }
+    });
     g.addEventListener('mousemove', moveTip);
     g.addEventListener('mouseleave', hideTip);
     svg.appendChild(g);
