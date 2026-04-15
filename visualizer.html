@@ -494,10 +494,8 @@ function renderLayer(idx, animAssignIdx = -1) {
   svg.setAttribute('viewBox', `0 0 ${SVG_W} ${SVG_H}`);
   svg.appendChild(svgEl('rect', { x:0, y:0, width:SVG_W, height:SVG_H, fill:'#0b0d13', rx:10 }));
   
-  const ly = 10;
-  svg.appendChild(svgEl('text', { x:cu(250), y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Left Hand'));
-  svg.appendChild(svgEl('text', { x:cu(850), y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Thumb Cluster'));
-  svg.appendChild(svgEl('text', { x:cu(1450), y:ly, class:'lbl', 'dominant-baseline':'hanging' }, 'Right Hand'));
+  
+
 
   LAYERS[idx].bindings.forEach((b, i) => {
     if (!POSITIONS[i]) return;
