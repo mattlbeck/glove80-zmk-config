@@ -591,6 +591,15 @@ function buildTabs() {
 
 // ── Interactive Editor Logic ──
 function getZmkFromEvent(e) {
+  // Map shifted characters first before falling back to physical scan codes
+  const shiftedSyms = {
+    '!':'EXCLAMATION', '@':'AT_SIGN', '#':'HASH', '$':'DOLLAR', '%':'PERCENT',
+    '^':'CARET', '&':'AMPS', '*':'ASTERISK', '(':'LEFT_PARENTHESIS', ')':'RIGHT_PARENTHESIS',
+    '_':'UNDERSCORE', '+':'PLUS', '{':'LEFT_BRACE', '}':'RIGHT_BRACE', '|':'PIPE',
+    ':':'COLON', '"':'DOUBLE_QUOTES', '~':'TILDE', '<':'LESS_THAN', '>':'GREATER_THAN', '?':'QUESTION'
+  };
+  if (shiftedSyms[e.key]) return shiftedSyms[e.key];
+
   // Map JS e.code / e.key to basic ZMK codes
   const keys = {
     Escape:'ESCAPE', Space:'SPACE', Enter:'ENTER', Tab:'TAB', Backspace:'BACKSPACE', Delete:'DELETE',
@@ -608,14 +617,6 @@ function getZmkFromEvent(e) {
   if (e.code.startsWith('Numpad')) return 'KP_N' + e.code.slice(6);
   if (e.code.startsWith('F') && e.code.length <= 3) return e.code;
   
-  const shiftedSyms = {
-    '!':'EXCLAMATION', '@':'AT_SIGN', '#':'HASH', '$':'DOLLAR', '%':'PERCENT',
-    '^':'CARET', '&':'AMPS', '*':'ASTERISK', '(':'LEFT_PARENTHESIS', ')':'RIGHT_PARENTHESIS',
-    '_':'UNDERSCORE', '+':'PLUS', '{':'LEFT_BRACE', '}':'RIGHT_BRACE', '|':'PIPE',
-    ':':'COLON', '"':'DOUBLE_QUOTES', '~':'TILDE', '<':'LESS_THAN', '>':'GREATER_THAN', '?':'QUESTION'
-  };
-  if (shiftedSyms[e.key]) return shiftedSyms[e.key];
-
   if (e.key.length === 1) { // Fallback for letters/numbers
     let c = e.key.toUpperCase();
     if(c>='A' && c<='Z') return c;
