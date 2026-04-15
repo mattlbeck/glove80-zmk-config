@@ -397,22 +397,28 @@ function parseZMKKeymap(raw) {
   const text = raw.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/\/\/.*/g, '');
   const km = /keymap\s*\{/.exec(text);
   if (!km) throw new Error('No "keymap {" block found.');
-  const inner = text.slice(km.index);
+  
+  const brace = text.indexOf('{', km.index);
+  let d=0, blockEnd=brace;
+  for(let i=brace; i<text.length; i++){
+      if(text[i]==='{') d++; else if(text[i]==='}') {d--; if(d===0){blockEnd=i; break;}}
+  }
+  const inner = text.slice(brace+1, blockEnd);
   
   const layers = [];
   const re = /([a-zA-Z_][a-zA-Z0-9_-]*)\s*\{/g;
   let m;
   while((m = re.exec(inner)) !== null) {
     if (m[1] === 'compatible') continue;
-    const blockStart = inner.indexOf('{', m.index);
-    let d=0, blockEnd=blockStart;
-    for(let i=blockStart; i<inner.length; i++){
-      if(inner[i]==='{') d++; else if(inner[i]==='}') {d--; if(d===0){blockEnd=i; break;}}
+    const lStart = inner.indexOf('{', m.index);
+    let ld=0, lEnd=lStart;
+    for(let i=lStart; i<inner.length; i++){
+      if(inner[i]==='{') ld++; else if(inner[i]==='}') {ld--; if(ld===0){lEnd=i; break;}}
     }
-    const chunk = inner.slice(blockStart, blockEnd);
+    const chunk = inner.slice(lStart, lEnd);
     const bm = chunk.match(/bindings\s*=\s*<([\s\S]*?)>\s*;/);
     if(bm) layers.push({ name: m[1], bindings: tokenizeBindings(bm[1]) });
-    re.lastIndex = blockEnd;
+    re.lastIndex = lEnd;
   }
   return layers;
 }
