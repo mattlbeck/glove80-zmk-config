@@ -162,89 +162,105 @@
 
         colemak-dh {
             bindings = <
-&kp F1      &kp F2           &kp F3                &kp F4                 &kp F5                                                                                                                                            &kp F6             &kp F7             &kp F8             &kp F9               &kp F10
-&trans      &kp N1           &kp ASTERISK          &kp EQUAL              &kp PLUS          &kp N5                                                                                                                  &kp N6  &kp SQT            &kp DOUBLE_QUOTES  &kp GRAVE          &kp N0               &kp C_VOL_UP
-&caps_word  &kp Q            &kp W                 &kp F                  &kp P             &kp B                                                                                                                   &kp J   &kp L              &kp U              &kp Y              &kp SEMI             &kp C_VOL_DN
-&kp TAB     &mt LCTRL A      &mt LEFT_ALT R        &mt LGUI S             &mt LEFT_SHIFT T  &kp G                                                                                                                   &kp M   &mt RIGHT_SHIFT N  &mt RGUI E         &mt RALT I         &mt RCTRL O          &kp K_MUTE
-&tog 3      &kp Z            &kp X                 &kp C                  &kp D             &kp V   &lt 1 BACKSPACE  &lt 5 PG_UP  &kp PAGE_DOWN              &kp LG(Z)      &kp LS(LG(Z))  &lt 1 TAB                &kp K   &kp H              &lt 3 COMMA        &kp DOT            &mt BACKSLASH SLASH  &kp C_PLAY_PAUSE
-&magic 7 0  &kp EXCLAMATION  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDERSCORE            &lt 2 SPACE      &lt 4 ENTER  &kp LG(LS(LA(LC(SPACE))))  &kp LG(SPACE)  &kp ESCAPE     &lt 3 LC(LA(LS(LG(H))))          &kp MINUS          &kp LEFT_BRACKET   &kp RIGHT_BRACKET  &kp QUESTION         &magic 7 0
+
+            &kp F1  &kp F2  &kp F3  &kp F4  &kp F5  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10
+            &trans  &kp N1  &kp EQUAL  &kp MINUS  &kp UNDERSCORE  &kp LESS_THAN  &kp GREATER_THAN  &kp SQT  &kp DOUBLE_QUOTES  &kp GRAVE  &kp N0  &kp C_VOL_UP
+            &caps_word  &kp Q  &kp W  &kp F  &kp P  &kp B  &kp J  &kp L  &kp U  &kp Y  &kp SEMI  &kp C_VOL_DN
+            &kp TAB  &mt LCTRL A  &mt LEFT_ALT R  &mt LGUI S  &mt LEFT_SHIFT T  &kp G  &kp M  &mt RIGHT_SHIFT N  &mt RGUI E  &mt RALT I  &mt RCTRL O  &kp K_MUTE
+            &tog 3  &kp Z  &kp X  &kp C  &kp D  &kp V  &lt 1 BACKSPACE  &lt 5 PG_UP  &kp PAGE_DOWN  &kp LG(Z)  &kp LS(LG(Z))  &lt 1 TAB  &kp K  &kp H  &lt 3 COMMA  &kp DOT  &mt BACKSLASH SLASH  &kp C_PLAY_PAUSE
+            &magic 7 0  &kp EXCLAMATION  &kp LEFT_BRACE  &kp LEFT_BRACKET  &kp LEFT_PARENTHESIS  &lt 2 SPACE  &lt 4 ENTER  &kp LG(LS(LA(LC(SPACE))))  &kp LG(SPACE)  &kp ESCAPE  &lt 3 LC(LA(LS(LG(H))))  &kp RIGHT_PARENTHESIS  &kp RIGHT_BRACKET  &kp RIGHT_BRACE  &kp QUESTION  &magic 7 0
+        
             >;
         };
 
         sympad {
             bindings = <
-&none  &none            &none                 &none                  &none                                                                                                                                &none      &none             &none              &none                       &none
-&none  &none            &kp ASTERISK          &kp EQUAL              &kp PLUS        &kp LESS_THAN                                                                                      &kp GREATER_THAN  &kp N7     &kp N8            &kp N9             &none                       &none
-&none  &none            &kp TILDE             &kp SQT                &kp DQT         &kp GRAVE                                                                                          &kp PLUS          &kp N4     &kp N5            &kp N6             &none                       &none
-&none  &kp AMPS         &kp HASH              &kp EXCLAMATION        &kp COLON       &kp AT_SIGN                                                                                        &kp EQUAL         &kp N1     &kp N2            &kp N3             &kp PERCENT                 &none
-&none  &kp CARET        &kp LEFT_BRACE        &kp RIGHT_BRACE        &kp DOLLAR      &kp PIPE       &kp BACKSPACE  &kp UP_ARROW  &kp DOWN     &kp LG(Z)      &kp LS(LG(Z))  &kp DELETE  &kp ASTERISK      &kp N0     &kp COMMA         &kp PERIOD         &mt NON_US_BACKSLASH SLASH  &none
-&none  &kp EXCLAMATION  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDERSCORE                 &kp SPACE      &kp ENTER     &kp LG(TAB)  &kp LG(SPACE)  &kp ESCAPE     &kp TAB                       &kp MINUS  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp QUESTION                &none
+
+            &none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+            &none  &none  &kp EQUAL  &kp UNDERSCORE  &kp MINUS  &kp LESS_THAN  &kp GREATER_THAN  &kp N7  &kp N8  &kp N9  &none  &none
+            &none  &none  &kp TILDE  &kp SQT  &kp DQT  &kp GRAVE  &kp PLUS  &kp N4  &kp N5  &kp N6  &none  &none
+            &none  &kp AMPS  &kp HASH  &kp EXCLAMATION  &kp COLON  &kp AT_SIGN  &kp EQUAL  &kp N1  &kp N2  &kp N3  &kp PERCENT  &none
+            &none  &kp CARET  &kp LEFT_BRACE  &kp RIGHT_BRACE  &kp DOLLAR  &kp PIPE  &kp BACKSPACE  &kp UP_ARROW  &kp DOWN  &kp LG(Z)  &kp LS(LG(Z))  &kp DELETE  &kp ASTERISK  &kp N0  &kp COMMA  &kp PERIOD  &mt NON_US_BACKSLASH SLASH  &none
+            &none  &kp EXCLAMATION  &kp LEFT_BRACE  &kp LEFT_BRACKET  &kp LEFT_PARENTHESIS  &kp SPACE  &kp ENTER  &kp LG(TAB)  &kp LG(SPACE)  &kp ESCAPE  &kp TAB  &kp RIGHT_PARENTHESIS  &kp RIGHT_BRACKET  &kp RIGHT_BRACE  &kp QUESTION  &none
+        
             >;
         };
 
         cursor {
             bindings = <
-&none  &none     &none           &none           &none                                                                                                                  &none           &none          &none          &none              &none
-&none  &none     &none           &none           &none          &none                                                                                        &none      &none           &none          &none          &none              &none
-&none  &none     &kp LG(LEFT)    &kp UP_ARROW    &kp RG(RIGHT)  &kp LG(X)                                                                                    &kp LG(X)  &none           &none          &none          &none              &none
-&none  &none     &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT      &kp LG(C)                                                                                    &kp LG(C)  &kp LEFT_SHIFT  &kp RIGHT_GUI  &kp RIGHT_ALT  &kp RIGHT_CONTROL  &none
-&none  &none     &kp LA(LEFT)    &kp LG(F)       &kp LA(RIGHT)  &kp LG(V)  &kp BACKSPACE  &none      &none        &kp LG(Z)      &kp LS(LG(Z))   &kp DELETE  &kp LG(V)  &none           &none          &none          &none              &none
-&none  &kp HOME  &kp PG_UP       &kp PG_DN       &kp END                   &kp SPACE      &kp ENTER  &kp LG(TAB)  &kp LG(SPACE)  &kp LA(ESCAPE)  &kp TAB                &none           &none          &none          &none              &none
+
+            &none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+            &none  &none  &none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+            &none  &none  &kp LG(LEFT)  &kp UP_ARROW  &kp RG(RIGHT)  &kp LG(X)  &kp LG(X)  &none  &none  &none  &none  &none
+            &none  &none  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT  &kp LG(C)  &kp LG(C)  &kp LEFT_SHIFT  &kp RIGHT_GUI  &kp RIGHT_ALT  &kp RIGHT_CONTROL  &none
+            &none  &none  &kp LA(LEFT)  &kp LG(F)  &kp LA(RIGHT)  &kp LG(V)  &kp BACKSPACE  &none  &none  &kp LG(Z)  &kp LS(LG(Z))  &kp DELETE  &kp LG(V)  &none  &none  &none  &none  &none
+            &none  &kp HOME  &kp PG_UP  &kp PG_DN  &kp END  &kp SPACE  &kp ENTER  &kp LG(TAB)  &kp LG(SPACE)  &kp LA(ESCAPE)  &kp TAB  &none  &none  &none  &none  &none
+        
             >;
         };
 
         mouse {
             bindings = <
-&trans  &trans  &trans             &trans          &trans                                                                                                                             &trans                   &trans                 &trans                  &trans    &trans
-&trans  &trans  &trans             &trans          &trans             &kp LS(LA(LC(LG(C))))                                                                    &kp LS(LA(LC(LG(C))))  &trans                   &trans                 &trans                  &trans    &trans
-&trans  &trans  &kp LC(LS(LA(E)))  &mmv MOVE_UP    &kp LC(LS(LA(N)))  &kp LG(X)                                                                                &kp LG(X)              &trans                   &trans                 &trans                  &trans    &trans
-&trans  &trans  &mmv MOVE_LEFT     &mmv MOVE_DOWN  &mmv MOVE_RIGHT    &kp LG(C)                                                                                &kp LG(C)              &mt RSHFT LC(LS(LA(Y)))  &kp RGUI               &mt RALT LC(LS(LA(L)))  &kp RALT  &trans
-&trans  &trans  &trans             &msc SCRL_UP    &msc SCRL_DOWN     &kp LG(V)              &mkp MCLK  &trans     &trans       &trans         &trans  &trans  &kp LG(V)              &trans                   &kp LC(LS(LA(COMMA)))  &kp LC(LS(LA(PERIOD)))  &trans    &trans
-&trans  &trans  &trans             &kp LC(DOWN)    &kp LC(UP)                                &mkp LCLK  &mkp RCLK  &kp LG(TAB)  &kp LG(SPACE)  &trans  &trans                         &trans                   &trans                 &trans                  &trans    &trans
+
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &kp LS(LA(LC(LG(C))))  &kp LS(LA(LC(LG(C))))  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &kp LC(LS(LA(E)))  &mmv MOVE_UP  &kp LC(LS(LA(N)))  &kp LG(X)  &kp LG(X)  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &kp LG(C)  &kp LG(C)  &mt RSHFT LC(LS(LA(Y)))  &kp RGUI  &mt RALT LC(LS(LA(L)))  &kp RALT  &trans
+            &trans  &trans  &trans  &msc SCRL_UP  &msc SCRL_DOWN  &kp LG(V)  &mkp MCLK  &trans  &trans  &trans  &trans  &trans  &kp LG(V)  &trans  &kp LC(LS(LA(COMMA)))  &kp LC(LS(LA(PERIOD)))  &trans  &trans
+            &trans  &trans  &trans  &kp LC(DOWN)  &kp LC(UP)  &mkp LCLK  &mkp RCLK  &kp LG(TAB)  &kp LG(SPACE)  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+        
             >;
         };
 
         screen_nav {
             bindings = <
-&trans  &trans                            &trans                 &trans                        &trans                                                                                                                              &trans                    &trans              &trans                     &trans                        &trans
-&trans  &trans                            &trans                 &trans                        &trans                 &trans                                                                             &trans                    &kp LC(LA(MINUS))         &kp LC(LA(RETURN))  &kp LC(LA(EQUAL))          &trans                        &trans
-&trans  &trans                            &trans                 &trans                        &trans                 &trans                                                                             &trans                    &kp LC(LA(D))             &kp LC(LA(F))       &kp LC(LA(G))              &trans                        &trans
-&trans  &kp LG(LC(LA(LS(LEFT_BRACKET))))  &kp LS(LC(LA(LG(L))))  &kp LS(LA(LC(LG(NUMBER_1))))  &kp LA(LS(LG(LC(R))))  &kp LS(LA(LC(LG(RIGHT_BRACKET))))                                                  &kp LC(LA(E))             &kp LC(LA(LEFT))          &kp LC(LA(M))       &kp LC(LA(RIGHT))          &kp LC(LA(T))                 &trans
-&trans  &trans                            &kp LS(LA(LC(LG(A))))  &kp LS(LA(LC(LG(S))))         &kp LS(LA(LC(LG(D))))  &trans                             &trans  &trans  &trans  &trans  &trans  &trans  &kp LS(LA(LC(LG(DOWN))))  &kp LC(LA(LS(LEFT)))      &kp LG(W)           &kp LC(LA(LS(RIGHT)))      &kp LS(LA(LC(LG(UP_ARROW))))  &trans
-&trans  &trans                            &trans                 &trans                        &trans                                                    &trans  &trans  &trans  &trans  &trans  &trans                            &kp LS(LA(LC(LG(LEFT))))  &trans              &kp LS(LA(LC(LG(RIGHT))))  &trans                        &trans
+
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp LC(LA(MINUS))  &kp LC(LA(RETURN))  &kp LC(LA(EQUAL))  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp LC(LA(D))  &kp LC(LA(F))  &kp LC(LA(G))  &trans  &trans
+            &trans  &kp LG(LC(LA(LS(LEFT_BRACKET))))  &kp LS(LC(LA(LG(L))))  &kp LS(LA(LC(LG(NUMBER_1))))  &kp LA(LS(LG(LC(R))))  &kp LS(LA(LC(LG(RIGHT_BRACKET))))  &kp LC(LA(E))  &kp LC(LA(LEFT))  &kp LC(LA(M))  &kp LC(LA(RIGHT))  &kp LC(LA(T))  &trans
+            &trans  &trans  &kp LS(LA(LC(LG(A))))  &kp LS(LA(LC(LG(S))))  &kp LS(LA(LC(LG(D))))  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp LS(LA(LC(LG(DOWN))))  &kp LC(LA(LS(LEFT)))  &kp LG(W)  &kp LC(LA(LS(RIGHT)))  &kp LS(LA(LC(LG(UP_ARROW))))  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp LS(LA(LC(LG(LEFT))))  &trans  &kp LS(LA(LC(LG(RIGHT))))  &trans  &trans
+        
             >;
         };
 
         switcher {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                                                                  &trans                &trans  &trans                 &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &trans                &trans  &trans                 &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &trans                &trans  &trans                 &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                                                  &trans  &kp LS(LA(LC(LEFT)))  &trans  &kp LS(LA(LC(RIGHT)))  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans                &trans  &trans                 &trans  &trans
-&trans  &trans  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans  &trans          &trans                &trans  &trans                 &trans  &trans
+
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp LS(LA(LC(LEFT)))  &trans  &kp LS(LA(LC(RIGHT)))  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+        
             >;
         };
 
         Amethyst {
             bindings = <
-&trans  &trans  &trans                 &trans             &trans                                                                                  &trans         &trans  &trans         &trans  &trans
-&trans  &trans  &trans                 &trans             &trans                  &trans                                                  &trans  &trans         &trans  &trans         &trans  &trans
-&trans  &trans  &trans                 &trans             &trans                  &trans                                                  &trans  &trans         &trans  &trans         &trans  &trans
-&trans  &trans  &kp LS(LA(SPACE))      &kp LC(LA(LS(H)))  &kp LS(LA(SPACE))       &trans                                                  &trans  &kp LS(LA(J))  &trans  &kp LS(LA(K))  &trans  &trans
-&trans  &trans  &kp LS(LA(LC(COMMA)))  &trans             &kp LS(LA(LC(PERIOD)))  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans         &trans  &trans         &trans  &trans
-&trans  &trans  &trans                 &trans             &trans                          &trans  &trans  &trans  &trans  &trans  &trans          &trans         &trans  &trans         &trans  &trans
+
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &kp LS(LA(SPACE))  &kp LC(LA(LS(H)))  &kp LS(LA(SPACE))  &trans  &trans  &kp LS(LA(J))  &trans  &kp LS(LA(K))  &trans  &trans
+            &trans  &trans  &kp LS(LA(LC(COMMA)))  &trans  &kp LS(LA(LC(PERIOD)))  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+        
             >;
         };
 
         magic {
             bindings = <
-&bt BT_CLR   &none            &none            &none            &none                                                                                               &none  &none  &none  &none  &bt BT_CLR_ALL
-&none        &none            &none            &none            &none            &none                                                                       &none  &none  &none  &none  &none  &none
-&none        &rgb_ug RGB_SPI  &rgb_ug RGB_SAI  &rgb_ug RGB_HUI  &rgb_ug RGB_BRI  &rgb_ug RGB_TOG                                                             &none  &none  &none  &none  &none  &none
-&bootloader  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD  &rgb_ug RGB_HUD  &rgb_ug RGB_BRD  &rgb_ug RGB_EFF                                                             &none  &none  &none  &none  &none  &bootloader
-&sys_reset   &none            &none            &none            &none            &none            &bt_2  &bt_3  &none         &none  &none  &none            &none  &none  &none  &none  &none  &sys_reset
-&none        &none            &none            &none            &none                             &bt_0  &bt_1  &out OUT_USB  &none  &none  &rgb_ug RGB_TOG         &none  &none  &none  &none  &none
+
+            &bt BT_CLR  &none  &none  &none  &none  &none  &none  &none  &none  &bt BT_CLR_ALL
+            &none  &none  &none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+            &none  &rgb_ug RGB_SPI  &rgb_ug RGB_SAI  &rgb_ug RGB_HUI  &rgb_ug RGB_BRI  &rgb_ug RGB_TOG  &none  &none  &none  &none  &none  &none
+            &bootloader  &rgb_ug RGB_SPD  &rgb_ug RGB_SAD  &rgb_ug RGB_HUD  &rgb_ug RGB_BRD  &rgb_ug RGB_EFF  &none  &none  &none  &none  &none  &bootloader
+            &sys_reset  &none  &none  &none  &none  &none  &bt_2  &bt_3  &none  &none  &none  &none  &none  &none  &none  &none  &none  &sys_reset
+            &none  &none  &none  &none  &none  &bt_0  &bt_1  &out OUT_USB  &none  &none  &rgb_ug RGB_TOG  &none  &none  &none  &none  &none
+        
             >;
         };
     };
