@@ -467,6 +467,13 @@ function formatLayerBindings(bindings) {
 // ── Rendering ──
 const PALETTE = ['#7c3aed','#0891b2','#059669','#d97706','#9333ea','#e11d48'];
 
+function svgEl(tag, attrs, txt) {
+  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+  if (txt !== undefined) e.textContent = txt;
+  return e;
+}
+
 function renderLayer(idx) {
   curIdx = idx;
   const svg = document.getElementById('kb'); svg.innerHTML = '';
