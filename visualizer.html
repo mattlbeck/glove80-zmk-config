@@ -769,7 +769,8 @@ document.addEventListener('drop', async e=>{
   try {
     const resp = await fetch('./config/glove80.keymap', {cache:'no-cache'});
     if(!resp.ok) throw new Error();
-    loadLayersState(parseZMKKeymap(await resp.text()), await resp.text(), 'glove80.keymap', false);
+    const text = await resp.text();
+    loadLayersState(parseZMKKeymap(text), text, 'glove80.keymap', false);
   } catch(_) {
     // Need dummy file text to support exporting demo logic fallback if needed
     loadLayersState([], "", "demo", true); // Using empty string to prevent failure
