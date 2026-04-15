@@ -569,20 +569,36 @@ function getZmkFromEvent(e) {
 }
 
 document.addEventListener('keydown', e => {
-  // Edit mode active, ignoring mod taps themselves unless they are singular assignments
+  // Handle Escape globally to cancel modes
+  if (e.key === 'Escape') { 
+    if (swapActive) cancelSwap();
+    else if (selKey) deselectKey();
+    return;
+  }
+
+  // ALWAYS allow layer hotkeys (0-9, arrows) to prioritise navigation over tying an assignment
+  if (!['INPUT','TEXTAREA'].includes(e.target.tagName) && LAYERS.length > 0) {
+    if (/^[0-9]$/.test(e.key) && +e.key < LAYERS.length) { 
+      e.preventDefault(); curIdx = +e.key; buildTabs(); renderLayer(curIdx); 
+      return; 
+    }
+    if (e.key === 'ArrowRight') { 
+      e.preventDefault(); curIdx = (curIdx+1)%LAYERS.length; buildTabs(); renderLayer(curIdx); 
+      return; 
+    }
+    if (e.key === 'ArrowLeft') { 
+      e.preventDefault(); curIdx = (curIdx-1+LAYERS.length)%LAYERS.length; buildTabs(); renderLayer(curIdx); 
+      return; 
+    }
+  }
+
+  // If in assignment mode (not swapping), capture typing for the physical assignment
   if (selKey && !swapActive && !['Shift','Control','Alt','Meta'].includes(e.key)) {
-    if (e.key === 'Escape') { deselectKey(); return; }
     const code = getZmkFromEvent(e);
     if (code) {
       e.preventDefault();
       assignKey(code);
     }
-    return;
-  }
-  if (!selKey && !['INPUT','TEXTAREA'].includes(e.target.tagName) && LAYERS.length > 0) {
-    if (/^[0-9]$/.test(e.key) && +e.key < LAYERS.length) { curIdx = +e.key; buildTabs(); renderLayer(curIdx); }
-    if (e.key === 'ArrowRight') { curIdx = (curIdx+1)%LAYERS.length; buildTabs(); renderLayer(curIdx); }
-    if (e.key === 'ArrowLeft')  { curIdx = (curIdx-1+LAYERS.length)%LAYERS.length; buildTabs(); renderLayer(curIdx); }
   }
 });
 
